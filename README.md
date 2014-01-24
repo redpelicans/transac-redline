@@ -38,7 +38,7 @@ module.exports = {
 Write an express server to mount `transac-redline` on it:
 
 ```javascript 
-var transac = require('transac-redline
+var transac = require('transac-redline')
   , express = require('express')
   , connect = require('connect')
   , http = require('http')
