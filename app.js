@@ -36,7 +36,7 @@ module.exports.start = function(cb){
     var transacId = redMongo.ObjectID(req.params.id)
     Transac.load(transacId, function(err, transac){
       if(err) return res.status(500).json(err);
-      if(!transac) return res.status(500).json({message: "Unknown transac", code: 'notransac'});
+      if(!transac) return res.status(418).json({message: "Unknown transac", code: 'notransac'});
       res.json(transac.toJSON());
     })
   }
@@ -44,12 +44,15 @@ module.exports.start = function(cb){
   function createTransac(req, res, next){
     var options = _.pick.bind(_, req.body).apply(_, Transac.options);
     if('valueDate' in options) options.valueDate = moment(options.valueDate, 'YYYY/MM/DD').toDate();
-    options.locked = options.locked == 'true';
-    options.nested = options.nested == 'true';
 
+    if('locked' in options) options.locked = options.locked === 'true';
+    if('nested' in options) options.nested = options.nested === 'true';
+    
     Transac.loadOrCreateFromOptions(options, function(err, transac){
-      if(err) res.status(500).json(err);
-      res.json(transac.toSummaryJSON());
+      if(err) {
+        if(err.code) res.status(418).json(err);
+        else res.status(500).json(err);
+      }else res.json(transac.toSummaryJSON());
     });
   }
 
@@ -59,8 +62,10 @@ module.exports.start = function(cb){
       , options = _.pick(req.body, 'type', 'label', 'message');
 
     Transac.addEventFromOptions(transacId, options, function(err, event){
-      if(err) res.status(500).json(err);
-      res.json(event.toJSON());
+      if(err){
+        if(err.code) res.status(418).json(err);
+        else res.status(500).json(err);
+      }else res.json(event.toJSON());
     });
   }
 }

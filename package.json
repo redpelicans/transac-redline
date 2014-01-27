@@ -15,7 +15,6 @@
     "mongo"
   ],
   "author": "Eric Basley <ebasley@gmail.com>",
-  "license": "Apache",
   "bugs": {
     "url": "https://github.com/redpelicans/transac-redline/issues"
   },
@@ -23,9 +22,13 @@
     "underscore": "1.5.2",
     "async": "*",
     "express": "*",
-    "connect": "*",
     "moment": "*",
-    "mongo-redline": "*"
+    "mongo-redline": "0.0.6"
   },
-  "homepage": "https://github.com/redpelicans/transac-redline"
+  "homepage": "https://github.com/redpelicans/transac-redline",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "BSD-2-Clause"
 }

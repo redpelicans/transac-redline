@@ -55,12 +55,12 @@ var ElementaryTransacProto = {
     return !this.hasEventTypes(['abort', 'commit']);
   },
 
-  get status(){
-    if(!this.lastEvent) return 'ok';
-    if(this.hasEventTypes(['error'])) return 'error';
-    if(this.hasEventTypes(['warning'])) return 'warning';
-    return 'ok';
-  },
+  // get status(){
+  //   if(!this.lastEvent) return 'ok';
+  //   if(this.hasEventTypes(['error'])) return 'error';
+  //   if(this.hasEventTypes(['warning'])) return 'warning';
+  //   return 'ok';
+  // },
 
   get lastEvent(){
     return this.events[this.events.length - 1];
@@ -168,7 +168,7 @@ var PlainTransac = redMongo.defineModel({
 
     addEvent: function(event, cb){
       var transac = this;
-      if(!transac.isRunning()) return setImmediate(cb, {message: "Can't add an event on a non running transac", code: 'closedtransac'});
+      if(!transac.isRunning()) return setImmediate(cb, {message: "Can't add an event on a non running transac", code: 'closed'});
       Transac.collection.update({_id: transac._id}, {$set: {status: transac.computeStatus(event)}, $push: {events: event}}, function(err){
         if(err)return cb(err);
         transac.events.push(event);
@@ -218,7 +218,7 @@ var MultiTransac = redMongo.defineModel({
 
     addEvent: function(event, cb){
       var transac = this;
-      if(!transac.isRunning()) return setImmediate(cb, {message: "Can't add an event on a non running transac", code: 'closedtransac'});
+      if(!transac.isRunning()) return setImmediate(cb, {message: "Can't add an event on a non running transac", code: 'closed'});
       var count = transac.nestedTransacs.length - 1
         , newStatus =  transac.lastElementaryTransac.computeStatus(event)
         , statusField = 'nestedTransacs.' + count + '.status'

@@ -1,6 +1,7 @@
 'use strict';
 
-var transac = require('..')
+//var transac = require('transac-redline')
+var transac = require('../')
   , express = require('express')
   , connect = require('connect')
   , http = require('http')
