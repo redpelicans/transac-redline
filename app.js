@@ -10,6 +10,7 @@ var Transac = require('./transac')
 module.exports.start = function(cb){
   var app = express();
 
+  app.use(express.static(__dirname + '/public'));
   app.post('/transacs', createTransac);
   app.put('/transacs/:id/events', createEvent);
   app.get('/transacs/:id', loadTransac);
@@ -17,13 +18,17 @@ module.exports.start = function(cb){
   
   cb(null, app);
 
+
   function loadTransacs(req, res, next){
     var dateMode = req.query.mode == 'value' ? 'valueDate' : 'processingTime'
-      , d1 = req.query.startDate && moment(req.query.startDate, 'YYYY/MM/DD').startOf('day').toDate() || moment().startOf('day').toDate()
-      , d2 = req.query.endDate && moment(req.query.endDate, 'YYYY/MM/DD').endOf('day').toDate() || moment().endOf('day').toDate()
+      , d1 = req.query.startDate && moment(req.query.startDate, 'YYYY/MM/DD').startOf('day').toDate()
+      , d2 = req.query.endDate && moment(req.query.endDate, 'YYYY/MM/DD').endOf('day').toDate()
+      , name = req.query.name
       , query = {};
 
-      query[dateMode] = {$gte: d1, $lte: d2};
+      if(d1 && d2)query[dateMode] = {$gte: d1, $lte: d2};
+      if(name)query['name'] = name;
+
 
     Transac.findAll(query, function(err, transacs){
       if(err) res.status(500).json(err);

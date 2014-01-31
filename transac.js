@@ -16,7 +16,7 @@ Event.prototype = {
   toJSON: function(){
     return {
       label: this.label,
-      time: moment(this.time).format("YYYY/MM/DD HH:mm:ss"),
+      time: +this.time,
       type: this.type,
       message: this.message
     }
@@ -36,7 +36,7 @@ var ElementaryTransacProto = {
 
   toJSON: function(){
     return {
-      processingTime: moment(this.processingTime).format("YYYY/MM/DD HH:mm:ss"),
+      processingTime: +this.processingTime,
       status: this.status,
       isRunning: this.isRunning(),
       server: this.server,
@@ -64,6 +64,10 @@ var ElementaryTransacProto = {
 
   get lastEvent(){
     return this.events[this.events.length - 1];
+  },
+
+  get lastEventTime(){
+    return this.lastEvent && this.lastEvent.time;
   },
 
   get delay(){
@@ -101,8 +105,9 @@ var Transac = redMongo.defineModel({
       return {
         id: this._id,
         name: this.name,
-        valueDate: moment(this.valueDate).format("YYYY/MM/DD"),
-        processingTime: moment(this.processingTime).format("YYYY/MM/DD HH:mm:ss"),
+        valueDate: +this.valueDate,
+        processingTime: +this.processingTime,
+        lastEventTime: +this.lastEventTime,
         locked: this.isLocked(),
         status: this.status,
         isRunning: this.isRunning(),
@@ -152,8 +157,9 @@ var PlainTransac = redMongo.defineModel({
       return {
         id: this._id,
         name: this.name,
-        valueDate: moment(this.valueDate).format("YYYY/MM/DD"),
-        processingTime: moment(this.processingTime).format("YYYY/MM/DD HH:mm:ss"),
+        valueDate: +this.valueDate,
+        processingTime: +this.processingTime,
+        lastEventTime: +this.lastEventTime,
         locked: this.isLocked(),
         status: this.status,
         isRunning: this.isRunning(),
@@ -204,8 +210,9 @@ var MultiTransac = redMongo.defineModel({
       return {
         id: this._id,
         name: this.name,
-        valueDate: moment(this.valueDate).format("YYYY/MM/DD"),
-        processingTime: moment(this.processingTime).format("YYYY/MM/DD HH:mm:ss"),
+        valueDate: +this.valueDate,
+        processingTime: +this.processingTime,
+        lastEventTime: +this.lastEventTime,
         locked: this.isLocked(),
         status: this.status,
         isRunning: this.isRunning(),
@@ -243,6 +250,14 @@ var MultiTransac = redMongo.defineModel({
 
     get lastElementaryTransac(){
       return this.nestedTransacs[this.nestedTransacs.length - 1];
+    },
+
+    get lastEvent(){
+      return this.lastElementaryTransac.lastEvent;
+    },
+
+    get lastEventTime(){
+      return this.lastElementaryTransac.lastEventTime;
     },
 
     isRunning: function(){
