@@ -110,7 +110,7 @@ transacCtrl.controller('TransacListCtrl', ['transacContext', '$scope', '$http', 
 }]);
 
 
-transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scope', '$http', '$routeParams', '_', '$q',  function(transacContext, $filter, $scope, $http, $routeParams, _, $q){
+transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scope', '$http', '$routeParams', '_', '$q', '$sce',  function(transacContext, $filter, $scope, $http, $routeParams, _, $q, $sce){
   function ymd(date){
     return $filter('date')(date, "yyyy/MM/dd");
   }
@@ -195,7 +195,7 @@ transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scop
 
   
   $scope.htmlMessage = function(event){
-    return event.message.replace(/\n/gm, "<BR>");
+    return $sce.trustAsHtml( event.message.replace(/(\n\r|\n|\r)/gm, "<br />") );
   }
 
   $scope.eventClass = function(event){
