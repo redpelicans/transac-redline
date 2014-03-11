@@ -1,4 +1,4 @@
-transac-redline
+transac-redline [![Build Status](https://travis-ci.org/redpelicans/transac-redline.png)](https://travis-ci.org/redpelicans/transac-redline) [![Dependency Status](https://david-dm.org/redpelicans/transac-redline.png)](https://david-dm.org/redpelicans/transac-redline) [![Coverage Status](https://coveralls.io/repos/redpelicans/transac-redline/badge.png?branch=master)](https://coveralls.io/r/redpelicans/transac-redline?branch=master)
 ===============
 
 transac-redline is a centralized  logging system aimed at helping monitoring business applications.
