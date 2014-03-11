@@ -1,6 +1,6 @@
 {
   "name": "transac-redline",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Centralized logging System to monitor business applications",
   "main": "index.js",
   "repository": {
@@ -26,9 +26,17 @@
     "mongo-redline": "0.0.6"
   },
   "homepage": "https://github.com/redpelicans/transac-redline",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+      "mocha": "latest"
+    , "mocha-lcov-reporter": "latest"
+    , "should": "latest"
+    , "coveralls": "latest"
+    , "jscoverage": "latest"
+    , "jshint": "latest"
   },
-  "license": "BSD-2-Clause"
+  "scripts": {
+    "test": "make test",
+    "coveralls": "make test-coveralls"
+  },
+  "license": "MIT"
 }
