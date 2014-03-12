@@ -1,6 +1,6 @@
 {
   "name": "transac-redline",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Centralized logging System to monitor business applications",
   "main": "index.js",
   "repository": {
@@ -19,10 +19,10 @@
     "url": "https://github.com/redpelicans/transac-redline/issues"
   },
   "dependencies": {
-    "underscore": "1.5.2",
-    "async": "*",
-    "express": "*",
-    "moment": "*",
+    "underscore": "1.6.x",
+    "async": "0.2.x",
+    "express": "3.4.x",
+    "moment": "2.5.x",
     "mongo-redline": "0.0.6"
   },
   "homepage": "https://github.com/redpelicans/transac-redline",

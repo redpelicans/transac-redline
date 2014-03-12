@@ -178,7 +178,7 @@ var PlainTransac = redMongo.defineModel({
       Transac.collection.update({_id: transac._id}, {$set: {status: transac.computeStatus(event)}, $push: {events: event}}, function(err){
         if(err)return cb(err);
         transac.events.push(event);
-        cb(null, event);
+        cb(null, event, transac);
       });
     },
 
@@ -240,7 +240,7 @@ var MultiTransac = redMongo.defineModel({
       Transac.collection.update({_id: transac._id}, {$set: statusQuery, $push: eventQuery}, function(err){
         if(err) return cb(err);
         transac.lastElementaryTransac.events.push(event);
-        cb(null, event);
+        cb(null, event, transac);
       });
     },
 
