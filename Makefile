@@ -15,11 +15,10 @@ lib-cov:
 clean:
 	rm -f transac-cov.js
 
-test-cov: lib-cov
-	@COVERAGE=1 $(MAKE) test REPORTER=html-cov > coverage.html
-	$(MAKE) clean
-
 test-coveralls: 
-	@NODE_ENV=test ./node_modules/.bin/istanbul cover  ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose
+	#@NODE_ENV=test ./node_modules/.bin/istanbul cover  ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose
+	@NODE_ENV=test ./node_modules/.bin/istanbul cover  ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js 
+	@NODE_ENV=test ./node_modules/.bin/istanbul report
+
 
 .PHONY: test test-w
