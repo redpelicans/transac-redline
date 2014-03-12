@@ -10,7 +10,7 @@ lint:
 	./node_modules/.bin/jshint ./lib ./lib-phantom ./test ./index.js
 
 lib-cov:
-	jscoverage --no-highlight lib lib-cov
+	./node_modules/.bin/jscoverage --no-highlight index.js
 
 clean:
 	rm -rf lib-cov
