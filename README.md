@@ -3,7 +3,7 @@ transac-redline
 
 [![Build Status](https://travis-ci.org/redpelicans/transac-redline.png)](https://travis-ci.org/redpelicans/transac-redline) 
 [![Dependency Status](https://david-dm.org/redpelicans/transac-redline.png)](https://david-dm.org/redpelicans/transac-redline) 
-[![Coverage Status](https://coveralls.io/repos/redpelicans/transac-redline/badge.png?branch=master)](https://coveralls.io/r/redpelicans/transac-redline?branch=master) 
+[![Coverage Status](https://coveralls.io/repos/redpelicans/transac-redline/badge.png?branch=master)](https://coveralls.io/r/redpelicans/transac-redline?branch=master)
 
 [![NPM](https://nodei.co/npm/transac-redline.png)](https://nodei.co/npm/transac-redline/)
 
