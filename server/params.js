@@ -1,6 +1,6 @@
 module.exports = {
   http:{
-    port: 3002,
+    port: 3003,
   },
   transac: {
     host: 'localhost',

@@ -16,6 +16,25 @@ body {
   border-collapse: collapse;
 }
 
+.event dt:hover{
+  background-color: #F7F7F7;
+}
+
+.myDropDown {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.history-header {
+  font-size: 30px;
+}
+
+.dropdown-history-table {
+  margin: 2px 0;
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .result-table th, .result-table td {
   padding: 8px;
   text-align: center;

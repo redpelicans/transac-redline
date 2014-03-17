@@ -1,0 +1,21 @@
+{
+  "name": "transac",
+  "version": "0.0.1",
+  "homepage": "https://github.com/redpelicans/transac-redline",
+  "authors": [
+    "eric-basley <ebasley@gmail.com>"
+  ],
+  "description": "Transac's web client",
+  "main": "index.html",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "~1.6.0",
+    "angular-route": "~1.2.14",
+    "angular-animate": "~1.2.14",
+    "angular-sanitize": "~1.2.14",
+    "ui-bootstrap": "~0.10.0",
+    "jquery": "~2.1.0",
+    "bootstrap": "~3.1.1",
+    "angular-ui-select": "~0.0.1"
+  }
+}

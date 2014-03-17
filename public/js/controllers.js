@@ -121,13 +121,14 @@ transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scop
 
   function eventsGroupByDate(transac){
     var res = {};
-    res[ymd(transac.processingTime)] = { events: [{ type: 'begin', time: transac.processingTime, message: firstMessage(transac) }] };
+    res[ymd(transac.processingTime)] = { events: [{ type: 'begin', isCollapsed: false, time: transac.processingTime, message: firstMessage(transac) }] };
     _.each(transac.events, function(event){
       var key = ymd(event.time);
       if(!res[key]) res[key] = { events:[] };
+      event.isCollapsed = false;
       res[key].events.push( event );
     });
-    return _.map(res, function(value, key){return {date: key, events: value.events, get panelClass(){ return transac.panelClass} }});
+    return _.map(res, function(value, key){return {date: key, isCollapsed: false, events: value.events, get panelClass(){ return transac.panelClass} }});
   }
 
   function eventsGroupByTransac(transac){
@@ -135,9 +136,9 @@ transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scop
     _.each(transac.nested, function(subTransac){
       var key = ymdhms(subTransac.processingTime)
         , nt = {};
-      nt = { date: key, get panelClass(){return panelClass(subTransac.status)},  events: [{ type: 'begin', time: subTransac.processingTime, message: firstMessage(subTransac) }] };
+      nt = { date: key, isCollapsed: false, get panelClass(){return panelClass(subTransac.status)}, events: [{ isCollapsed: false, type: 'begin', time: subTransac.processingTime, message: firstMessage(subTransac) }] };
       res.push(nt);
-      _.each(subTransac.events, function(event){ nt.events.push( event ) });
+      _.each(subTransac.events, function(event){ event.isCollapsed = false; nt.events.push( event ) });
     });
     return res;
   }
@@ -174,8 +175,18 @@ transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scop
     return scope.transac.id == transac.id ? 'yes' : 'no';
   }
 
-  $scope.loadDetailFromHistory = function(transacId){
-    loadDetail(transacId).then(function(data){
+  function formatSelect2(transac){
+    console.log(transac);
+    return "TRANSAC => ";
+  };
+
+  $scope.select2Options = {
+    formatResult: formatSelect2,
+    formatSelection: formatSelect2,
+  };
+
+  $scope.loadDetailFromHistory = function(id){
+    loadDetail(id).then(function(data){
       setTransac(data);
     })
   }
@@ -208,6 +219,13 @@ transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scop
       case 'warning':
         return "event event_" + event.type;
     }
+  }
+
+  $scope.toggleEventsView = function(elt){
+    elt.isCollapsed = !elt.isCollapsed;
+    _.each(elt.events, function(event){
+      event.isCollapsed = elt.isCollapsed;
+    });
   }
 
 

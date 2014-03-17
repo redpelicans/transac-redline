@@ -3,6 +3,7 @@ var transacApp = angular.module('transac', [
   'ngSanitize',
   'transacCtrl',
   'ui.bootstrap',
+  'ui.select',
   'underscore'
 ]);
 
