@@ -66,7 +66,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr  ng-repeat="transac in transacs | filter:params.search | orderBy:params.sort:params.reverse" >
+        <tr  class="Xtransac-listing" ng-repeat="transac in transacs | filter:params.search | orderBy:params.sort:params.reverse" >
           <td style="text-align: left;"> 
             <span class="{{ transac.statusIcon }}"></span> 
             <span class="{{ transac.isRunningIcon }}"></span> 
