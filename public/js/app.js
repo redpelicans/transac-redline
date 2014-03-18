@@ -1,5 +1,6 @@
 var transacApp = angular.module('transac', [
   'ngRoute',
+  'ngAnimate',
   'ngSanitize',
   'transacCtrl',
   'ui.bootstrap',

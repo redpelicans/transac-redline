@@ -1,5 +1,5 @@
 
-<div class="page-header ">
+<div class="page-header transac-header">
   <div class="dropdown" >
     <span class="history-header">{{transac.name}} </span><div class="history-header dropdown-toggle pull-right glyphicon glyphicon-th" ></div> 
     <div class="dropdown-menu pull-right myDropDown">
@@ -41,29 +41,31 @@
 </div>
 </div>
 
-<div class=row">
-  <div class="col-md-12">
-    <div class="event_list">
-      <div ng-repeat="elt in events">
-        <div class="panel {{elt.panelClass}}">
-          <div class="panel-heading">{{ elt.date }}<i ng-click="toggleEventsView(elt); " class="pull-right glyphicon" ng-class="{'glyphicon-collapse-down': !elt.isCollapsed, 'glyphicon-collapse-up': elt.isCollapsed}"></i> </div>
-          <div class="panel-body">
-            <div class="event" ng-repeat="event in elt.events">
-              <dl>
-                <dt ng-click='event.isCollapsed = !event.isCollapsed' class="{{eventClass(event)}}">
-                  <span class="time">{{event.time | date: "HH:mm:ss"}}</span>
-                  <span class="label">{{event.label}}</span>
-                </dt>
-                <dd>
-                  <div collapse='event.isCollapsed' class="message">
-                    <span ng-bind-html="htmlMessage(event)"></span>
-                  </div>
-                </dd>
-              </dl>
+<div class="transac-detail">
+  <div class=row">
+    <div class="col-md-12">
+      <div class="event_list">
+        <div ng-repeat="elt in events">
+          <div class="panel {{elt.panelClass}}">
+            <div class="panel-heading">{{ elt.date }}<i ng-click="toggleEventsView(elt); " class="pull-right collapse-btn glyphicon" ng-class="{'glyphicon-collapse-down': !elt.isCollapsed, 'glyphicon-collapse-up': elt.isCollapsed}"></i> </div>
+            <div class="panel-body">
+              <div class="event" ng-repeat="event in elt.events">
+                <dl>
+                  <dt ng-click='event.isCollapsed = !event.isCollapsed' class="{{eventClass(event)}}">
+                    <span class="time">{{event.time | date: "HH:mm:ss"}}</span>
+                    <span class="label">{{event.label}}</span>
+                  </dt>
+                  <dd>
+                    <div collapse='event.isCollapsed' class="message">
+                      <span ng-bind-html="htmlMessage(event)"></span>
+                    </div>
+                  </dd>
+                </dl>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
+  </div>
 </div>

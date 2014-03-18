@@ -2,6 +2,38 @@ body {
     padding-top: 50px;
 }
 
+.tlogo{
+  font-size: 150%;
+  color: orange;
+}
+
+.collapse-btn{
+  font-size: 140%;
+}
+
+.transac-header {
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  padding-left: 20%;
+  padding-right: 20%;
+  position: fixed;
+  z-index: 1000;
+  background: rgba(245,245,245,0.88);
+  box-shadow: 0 0 2px #999;
+}
+
+.transac-detail {
+  margin-top: 120px;
+  position: relative;
+}
+
+.transac-list {
+  margin-top: 180px;
+  position: relative;
+}
 .date {
   margin-bottom: 20px;
 }
