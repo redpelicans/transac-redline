@@ -17,8 +17,6 @@ body {
   right: 0;
   padding-top: 30px;
   padding-bottom: 10px;
-  padding-left: 20%;
-  padding-right: 20%;
   position: fixed;
   z-index: 1000;
   background: rgba(245,245,245,0.88);
@@ -44,7 +42,6 @@ body {
 }
 
 .result-table {
-  margin: 50px 0;
   width: 100%;
   border-collapse: collapse;
 }
@@ -53,9 +50,11 @@ body {
   background-color: #F7F7F7;
 }
 
-.myDropDown {
+.dropdown-menu.pull-right.myDropDown {
   max-height: 300px;
   overflow: auto;
+  left: 0;
+  right: 0;
 }
 
 .history-header {

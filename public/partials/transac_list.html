@@ -1,11 +1,10 @@
-<div class="transac-header">
-  <div class="page-header">
-    <h1>Transacs List</h1>
-  </div>
-  <div>
-    <form role="form">
-      <div class=row">
-
+<div class="page-header transac-header">
+  <div class="container">
+    <div class=row">
+      <form role="form">
+        <div class="col-md-4">
+          <span class="history-header">Transacs List</span>
+        </div>
         <div class="col-md-2">
           <label>Date Mode</label>
           <select class="form-control" ng-model="params.dateMode" ng-options="m for m in params.dateModes" ng-change="dateModeHasChanged()">
@@ -48,11 +47,7 @@
   </div>
 </div>
 
-<div class="transac-list">
-  <div class="row">
-    <div class="col-md-2"></div>
-  </div>
-
+<div class="container transac-detail">
   <div class="row">
     <table class="table table-hover result-table">
       <thead>
