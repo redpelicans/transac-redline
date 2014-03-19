@@ -20,7 +20,7 @@ module.exports.start = function(cb){
 
 
   function loadTransacs(req, res, next){
-    var dateMode = req.query.mode == 'value' ? 'valueDate' : 'processingTime'
+    var dateMode = req.query.mode == 'v' ? 'valueDate' : 'processingTime'
       , d1 = req.query.startDate && moment(req.query.startDate, 'YYYY/MM/DD').startOf('day').toDate()
       , d2 = req.query.endDate && moment(req.query.endDate, 'YYYY/MM/DD').endOf('day').toDate()
       , name = req.query.name
@@ -28,7 +28,6 @@ module.exports.start = function(cb){
 
       if(d1 && d2)query[dateMode] = {$gte: d1, $lte: d2};
       if(name)query['name'] = name;
-
 
     Transac.findAll(query, function(err, transacs){
       if(err) res.status(500).json(err);
