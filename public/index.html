@@ -3,24 +3,21 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transacs</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/app.css"/>
     <link rel="stylesheet" href="css/animations.css"/>
   </head>
   <body >
     <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
-      <div class="row">
-        <div class="col-md-9 header-branding">
+      <div class="container-fluid">
+        <div class="navbar-header">
           <div class="brand navbar-brand">
-            <span class="glyphicon glyphicon-eye-open tlogo">
-          </div>
-          <div class="nav navbar-nav">
-            <a href="#/transacs" class="navbar-brand">Transacs</a>
+            <a href="/"><div class="tlogo tlogo-xs tlogo-sm tlogo-md tlogo-lg"></div></a>
           </div>
         </div>
       </div>
     </nav>
-
+    
     <div class="container view-container">
       <div ng-view class="view-frame"></div>
     </div>

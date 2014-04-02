@@ -2,25 +2,93 @@ body {
     padding-top: 50px;
 }
 
-.tlogo{
-  font-size: 150%;
-  color: orange;
+.tlogo {
+  background: url('/img/logo.svg') no-repeat top left;
+	margin-top: -20px;
+	margin-left: -20px;
+}
+
+.tlogo-xs {
+	background-size: 3em;
+	width: 3em;
+	height: 3em;
+}
+
+@media (min-width: 768px) {
+	.tlogo-sm {
+		background-size: 5em;
+		width: 5em;
+		height: 5em;
+	}
+}
+
+@media (min-width: 992px) {
+	.tlogo-md {
+		background-size: 5em;
+		width: 5em;
+		height: 5em;
+	}
+}
+
+@media (min-width: 1400px) {
+	.tlogo-lg {
+		background-size: 8em;
+		width: 8em;
+		height: 8em;
+	}
 }
 
 .collapse-btn{
   font-size: 140%;
 }
 
+.no-background {
+  background: none!important;
+}
+
+.affixed-container {
+  display: none;
+}
+
+.affixed-container > .hidden-tooltip {
+  display: none;
+  visibility: hidden;
+}
+
 .transac-header {
   top: 0;
   left: 0;
   right: 0;
-  padding-top: 30px;
-  padding-bottom: 10px;
+  padding: 60px 0 10px;
   position: fixed;
-  z-index: 1000;
   background: rgba(245,245,245,0.88);
   box-shadow: 0 0 2px #999;
+  z-index: 1000;
+}
+
+.transac-header.affix {
+  padding: 15px;
+  box-shadow: none;
+  background: none;
+  z-index: 9999;
+}
+
+.transac-header.affix-done {
+  -o-transition:.9s;
+  -ms-transition:.9s;
+	-moz-transition:.9s;
+	-webkit-transition:.9s;
+	transition:.9s;
+	color: #999;
+}
+
+.transac-header.affix .glyphicon-search {
+  margin-left: 5px;
+  top: 2px;
+}
+
+.transac-header.affix .glyphicon-search:hover {
+	cursor: pointer;
 }
 
 .transac-detail {
@@ -57,8 +125,14 @@ body {
   right: 0;
 }
 
-.history-header {
+.header-title {
   font-size: 30px;
+}
+
+.affixed-container > .header-title,
+.affixed-container >.dropdown > .header-title {
+  font-size: 21px;
+  top: 4px;
 }
 
 .dropdown-history-table {
