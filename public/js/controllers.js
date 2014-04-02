@@ -57,8 +57,8 @@ transacCtrl.factory('transacContext', function(){
       sort: 'processingTime',
       reverse: true,
       dateModes: modes,
-      dateMode: modes[0],
-      startDate: new Date(today.getFullYear(), today.getMonth(), 1),
+      dateMode: modes[1],
+      startDate: today,
       endDate: today,
       get startDateName(){
         var key = this.dateMode == 'Value Date' ? 'Value' : 'Processing';
