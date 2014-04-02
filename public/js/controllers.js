@@ -105,7 +105,7 @@ transacCtrl.controller('TransacListCtrl', ['transacContext', '$scope', '$http', 
     loadTransacs();
   }
 
-
+  headerAffix();
  loadTransacs();
 }]);
 
@@ -228,5 +228,32 @@ transacCtrl.controller('TransacDetailCtrl', ['transacContext', '$filter', '$scop
     });
   }
 
-
+  headerAffix();
 }]);
+
+function headerAffix() {
+  var $transacHeader = $('.transac-header')
+    , $affixedContainer = $transacHeader.find('.affixed-container')
+    , $container = $transacHeader.find('.container');
+  
+  $transacHeader.affix({
+    offset: { 
+			top: $('.navbar').outerHeight()
+		}
+	}).on('affix.bs.affix', function() {
+    $transacHeader.addClass('no-background');
+    $container.hide();
+    
+    //need to be called in next tick
+    setTimeout(function() {
+      $transacHeader.addClass('affix-done');
+      $affixedContainer.show();
+    }, 0);
+  }).on('affix-top.bs.affix', function() {
+    $transacHeader.removeClass('no-background');
+    $transacHeader.removeClass('affix-done');
+    
+    $container.show();
+    $affixedContainer.hide();
+	});
+}

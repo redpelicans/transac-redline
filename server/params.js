@@ -3,7 +3,7 @@ module.exports = {
     port: 3003,
   },
   transac: {
-    host: 'localhost',
+    host: 'newcockpitjs',
     port: 27017,
     database: 'transacs',
     auto_reconnect: true,
