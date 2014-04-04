@@ -1,6 +1,6 @@
 {
   "name": "transac-redline",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Centralized logging System to monitor business applications",
   "main": "index.js",
   "repository": {
