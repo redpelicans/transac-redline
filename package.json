@@ -1,8 +1,7 @@
 {
   "name": "transac-redline",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Centralized logging System to monitor business applications",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/redpelicans/transac-redline.git"
@@ -15,27 +14,66 @@
     "mongo"
   ],
   "author": "Eric Basley <ebasley@gmail.com>",
+  "homepage": "https://github.com/redpelicans/transac-redline",
   "bugs": {
     "url": "https://github.com/redpelicans/transac-redline/issues"
   },
   "dependencies": {
     "underscore": "1.6.x",
     "async": "0.6.x",
-    "express": "3.5.x",
+    "express": "4.1.x",
     "moment": "2.5.x",
+    "body-parser": "1.0.x",
+    "morgan": "latest",
     "mongo-redline": "latest"
   },
-  "homepage": "https://github.com/redpelicans/transac-redline",
   "devDependencies": {
-      "mocha": "latest"
-    , "should": "latest"
-    , "coveralls": "latest"
-    , "istanbul": "latest"
-    , "jshint": "latest"
+    "grunt": "~0.4.1",
+    "grunt-autoprefixer": "~0.4.0",
+    "grunt-bower-install": "~1.0.0",
+    "grunt-concurrent": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-htmlmin": "~0.1.3",
+    "grunt-contrib-jshint": "~0.7.1",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-watch": "~0.5.2",
+    "grunt-google-cdn": "~0.2.0",
+    "grunt-newer": "~0.6.1",
+    "grunt-ngmin": "~0.0.2",
+    "grunt-rev": "~0.1.0",
+    "grunt-svgmin": "~0.2.0",
+    "grunt-usemin": "~2.0.0",
+    "jshint-stylish": "~0.1.3",
+    "load-grunt-tasks": "~0.4.0",
+    "time-grunt": "~0.2.1",
+    "karma-ng-scenario": "~0.1.0",
+    "grunt-karma": "~0.8.3",
+    "karma": "~0.12.14",
+    "karma-ng-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.5",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "mocha": "latest",
+    "should": "latest",
+    "coveralls": "latest",
+    "istanbul": "latest",
+    "jshint": "latest",
+    "grunt-sed": "~0.1.1",
+    "grunt-express-server": "~0.4.17",
+    "grunt-node-inspector": "~0.1.5",
+    "grunt-mocha-test": "~0.10.2",
+    "grunt-env": "~0.4.1",
+    "grunt-shell": "~0.7.0",
+    "grunt-coveralls": "~0.3.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "make test",
-    "coveralls": "make test-coveralls"
+    "test": "grunt mochaTest:test",
+    "coveralls": "grunt publish-coveralls"
   },
   "license": "MIT"
 }
