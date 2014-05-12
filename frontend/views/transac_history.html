@@ -1,0 +1,28 @@
+<table class="table table-hover result-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th><a href="" style="color: black;" ng-click="params.sort='name'; params.reverse=!params.reverse">Name</a></th>
+      <th><a href="" style="color: black;" ng-click="params.sort='server'; params.reverse=!params.reverse">Server</a></th>
+      <th><a href="" style="color: black;" ng-click="params.sort='valueDate'; params.reverse=!params.reverse">ValueDate</a></th>
+      <th><a href="" style="color: black;" ng-click="params.sort='processingTime'; params.reverse=!params.reverse">ProcessingTime</a></th>
+      <th><a href="" style="color: black;" ng-click="params.sort='delay'; params.reverse=!params.reverse">ProcessingDelay</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="animate-repeat" ng-repeat="transac in transacs | filter:params.search | orderBy:params.sort:params.reverse" >
+      <td> 
+        <span class="{{ statusIcon(transac) }}"></span> 
+        <span class="{{ isRunningIcon(transac) }}"></span> 
+        <span class="{{ isMultiIcon(transac) }}"></span> 
+        <span class="{{ isLockIcon(transac) }}"></span> 
+      </td>
+      <td> <a href="#/transacs/{{transac.id}}">{{transac.name}}</a> </td>
+      <td> {{transac.server}} </td>
+      <td> {{transac.valueDate | date: 'yyyy/MM/dd'}} </td>
+      <td> {{transac.processingTime | date: 'yyyy/MM/dd @h:mma'}} </td>
+      <td class="delay"> {{transac.delay}} </td>
+    </tr>
+  </tbody>
+</table>
+

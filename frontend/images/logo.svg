@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape by Victor Gasia -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="393"
+   height="418"
+   id="Oeil">
+  <title id = "titre">Oeil eye</title>
+  <desc  id = "description">Crée par Victor GASIA 2012 pour Wikimedia Commons</desc>
+  <defs  id = "defs"></defs>
+<metadata   id="metadata"></metadata>
+  <path
+     d="m 343.36386,200.17317 a 156.49138,156.49138 0 1 1 -312.982756,0 156.49138,156.49138 0 1 1 312.982756,0 z"
+     transform="translate(9.62752,8.8268283)"
+     id="path3027"
+     style="color:#000000;fill:#f27c01;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.48031497;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+  <path
+     d="m -198.05044,197.02042 a 11.177956,11.177956 0 1 1 -22.35591,0 11.177956,11.177956 0 1 1 22.35591,0 z"
+     transform="translate(407.35692,13.896572)"
+     id="path3047"
+     style="color:#000000;fill:none;stroke:#fbca87;stroke-width:7.44094467;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+  <path
+     d="m 242.39091,200.02722 c 0.85557,3.48938 1.30928,7.13659 1.30928,10.88977 l 0,0 c 0,25.16853 -20.40313,45.57166 -45.57166,45.57166 -25.16854,0 -45.57166,-20.40313 -45.57166,-45.57166 0,-6.16717 1.22504,-12.04822 3.44507,-17.41307"
+     id="path3874"
+     style="color:#000000;fill:none;stroke:#fbca87;stroke-width:7.44094467;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+  <path
+     d="M 307.04194,219.2288 C 194.11593,121.20674 129.62772,126.36579 97.24031,167.92486"
+     id="path3842"
+     style="fill:none;stroke:#fbca87;stroke-width:7.44094467;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <path
+     d="m 293.85768,237.28551 c -62.53761,-62.35003 -131.80672,-64.81065 -188.82504,-13.5067 43.58327,40.69922 119.4644,43.31458 168.54708,20.88701 6.69962,-0.5374 29.76479,2.07806 20.27796,-7.38031 z"
+     id="path3846"
+     style="fill:none;stroke:#fbca87;stroke-width:7.08661413;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+</svg>

@@ -1,0 +1,110 @@
+<div class="transac-header">
+  <div class="affixed-container container">
+    <div class="affixed-content dropdown">
+      <div class="dropdown-menu pull-right myDropDown">
+        <div class="event_history">
+          <table class="table table-hover dropdown-history-table" >
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Server</th>
+                <th>ValueDate</th>
+                <th>FirstEventTime</th>
+                <th>LastEventTime</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-click="loadDetailFromHistory(transac.id)" class="animate-repeat" ng-repeat="transac in transacs | orderBy:'-processingTime'" >
+                <td> 
+                  <span class="{{ transac.statusIcon }}"></span> 
+                  <span class="{{ transac.isRunningIcon }}"></span> 
+                  <span class="{{ transac.isMultiIcon }}"></span> 
+                  <span class="{{ transac.isLockIcon }}"></span> 
+                </td>
+                <td> 
+                  <a href="" ng-click="loadDetailFromHistory(transac.id)">{{transac.name}}</a>
+                </td>
+                <td> {{transac.server}} </td>
+                <td> {{transac.valueDate | date: 'yyyy/MM/dd'}} </td>
+                <td> {{transac.processingTime | date: 'yyyy/MM/dd HH:mm:ss'}} </td>
+                <td> {{transac.lastEventTime | date: 'yyyy/MM/dd HH:mm:ss'}} </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <span class="header-title">{{transac.name}} </span><div class="header-title dropdown-toggle pull-right glyphicon glyphicon-th" ></div> 
+    </div>
+  </div>
+  <div class="container">
+    <div class="dropdown">
+      <span class="header-title">{{transac.name}} </span><div class="header-title dropdown-toggle pull-right glyphicon glyphicon-th" ></div> 
+      <div class="dropdown-menu pull-right myDropDown">
+        <div class="event_history">
+          <table class="table table-hover dropdown-history-table" >
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Server</th>
+                <th>ValueDate</th>
+                <th>FirstEventTime</th>
+                <th>LastEventTime</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-click="loadDetailFromHistory(transac.id)" class="animate-repeat" ng-repeat="transac in transacs | orderBy:'-processingTime'" >
+                <td> 
+                  <span class="{{ transac.statusIcon }}"></span> 
+                  <span class="{{ transac.isRunningIcon }}"></span> 
+                  <span class="{{ transac.isMultiIcon }}"></span> 
+                  <span class="{{ transac.isLockIcon }}"></span> 
+                </td>
+                <td> 
+                  <a href="" ng-click="loadDetailFromHistory(transac.id)">{{transac.name}}</a>
+                </td>
+                <td> {{transac.server}} </td>
+                <td> {{transac.valueDate | date: 'yyyy/MM/dd'}} </td>
+                <td> {{transac.processingTime | date: 'yyyy/MM/dd HH:mm:ss'}} </td>
+                <td> {{transac.lastEventTime | date: 'yyyy/MM/dd HH:mm:ss'}} </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="subtitle">From: {{transac.processingTime | date: "yyyy/MM/dd HH:mm:ss" }} - To: {{transac.lastEventTime | date: "yyyy/MM/dd HH:mm:ss" }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid transac-detail">
+  <div class="row">
+      <div class="event_list">
+        <div ng-repeat="elt in events">
+          <div class="panel {{elt.panelClass}}">
+            <div class="panel-heading">{{ elt.date }}<i ng-click="toggleEventsView(elt); " class="pull-right collapse-btn glyphicon" ng-class="{'glyphicon-collapse-down': !elt.isCollapsed, 'glyphicon-collapse-up': elt.isCollapsed}"></i> </div>
+            <div class="panel-body">
+              <div class="event" ng-repeat="event in elt.events">
+                <dl>
+                  <dt ng-click='event.isCollapsed = !event.isCollapsed' class="{{eventClass(event)}}">
+                    <span class="time">{{event.time | date: "HH:mm:ss"}}</span>
+                    <span class="label">{{event.label}}</span>
+                  </dt>
+                  <dd>
+                    <div collapse='event.isCollapsed' class="message">
+                      <span ng-bind-html="htmlMessage(event)"></span>
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
