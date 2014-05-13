@@ -1,25 +1,37 @@
 'use strict';
 
-var transacApp = angular.module('transacRedlineApp', [
+var app = angular.module('transac', [
+  'transac.services',
+  'transac.directives',
+  'transac.controller',
   'ngRoute',
   'ngAnimate',
   'ngSanitize',
   'ui.bootstrap',
-  'ui.select',
-  'transacRedlineMainCtrl',
-  'underscore'
+  'ui.select'
 ]);
 
-transacApp.config(['$routeProvider',
+app.config(['$routeProvider',
   function($routeProvider){
     $routeProvider.
       when('/transacs', {
         templateUrl: 'views/transac_list.html',
-        controller: 'TransacListCtrl'
+        controller: 'TransacListCtrl',
+        resolve:{
+          transacs: function(TransacsLoader){
+            return TransacsLoader();
+          }
+        }
+
       }).
       when('/transacs/:transacId', {
         templateUrl: 'views/transac_detail.html',
-        controller: 'TransacDetailCtrl'
+        controller: 'TransacDetailCtrl',
+        resolve:{
+          transac: function(TransacLoader){
+            return TransacLoader();
+          }
+        }
       }).
       otherwise({
         redirectTo: '/transacs'
@@ -27,11 +39,5 @@ transacApp.config(['$routeProvider',
   }
 ]);
 
-transacApp.controller('MainCtrl', ['$scope', function($scope){
-  $scope.message = 'COUCOU';
-}]);
 
-var underscore = angular.module('underscore', []);
-underscore.factory('_', function(){
-  return window._; // assumes underscore has already been loaded on the page
-});
+

@@ -43,7 +43,7 @@ module.exports = function (grunt) {
         tasks: ['bowerInstall']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: ['backend/*.js', '<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: true
@@ -98,7 +98,7 @@ module.exports = function (grunt) {
         files: [{
           dot: true,
           src: [
-            'backend/coverage', 
+            'backend/coverage',
             '.tmp',
             '<%= yeoman.dist %>/*',
             '!<%= yeoman.dist %>/.git*'
@@ -325,7 +325,7 @@ module.exports = function (grunt) {
         options:{
           script: "backend/main.js",
           //background: false,
-          node_env: 'development'
+          "node_env": 'development'
         },
       }
     },
