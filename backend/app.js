@@ -12,13 +12,18 @@ module.exports.start = function(cb){
   var app = express();
 
   app.use(bodyParser());
-  app.post('/transacs', createTransac);
   app.put('/transacs/:id/events', createEvent);
+  app.get('/transacs/ping', ping);
   app.get('/transacs/:id', loadTransac);
   app.get('/transacs', loadTransacs);
+  app.post('/transacs', createTransac);
   
   cb(null, app);
 
+
+  function ping(req, res, next){
+    res.json();
+  }
 
   function loadTransacs(req, res, next){
     var dateMode = req.query.mode == 'v' ? 'valueDate' : 'processingTime'

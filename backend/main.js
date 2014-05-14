@@ -21,7 +21,10 @@ var async = require('async')
     // app.use(require('connect-livereload')({
     //   port: 35729
     // }));
-    app.use(morgan('dev'));
+    app.use(morgan({format: 'dev', skip: function(req, res){
+      var r = /\/ping/;
+      return r.exec(req.url);
+    }}));
     app.use('/', transacApp);
     app.listen(params.http.port);
     console.log('Ready to transac with U ...');

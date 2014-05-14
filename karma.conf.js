@@ -11,12 +11,22 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'app/bower_components/angular/angular.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/scripts/*.js',
-      'app/scripts/**/*.js',
-      'test/mock/**/*.js',
-      'test/spec/**/*.js'
+      'frontend/bower_components/jquery/dist/jquery.js',
+      'frontend/bower_components/angular/angular.js',
+      'frontend/bower_components/angular-mocks/angular-mocks.js',
+      'frontend/bower_components/underscore/underscore.js',
+      'frontend/bower_components/angular-route/angular-route.js',
+      'frontend/bower_components/angular-animate/angular-animate.js',
+      'frontend/bower_components/angular-sanitize/angular-sanitize.js',
+      'frontend/bower_components/angular-resource/angular-resource.js',
+      'frontend/bower_components/bootstrap/dist/js/bootstrap.js',
+      'frontend/bower_components/angular-ui-select/select.js',
+      'frontend/lib/ui-bootstrap-tpls-0.10.0.min.js', 
+      'frontend/bower_components/angular-ui-select/dist/select.js',
+      'frontend/js/*.js',
+      'frontend/js/**/*.js',
+      // 'frontend/test/mock/**/*.js',
+       'frontend/test/unit/*.js',
     ],
 
     // list of files / patterns to exclude
