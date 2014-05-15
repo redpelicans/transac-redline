@@ -11,24 +11,42 @@ var app = angular.module('transac.controller', [
   'ui.select',
 ]);
 
-app.controller('MainCtrl', ['$scope', '$interval', '$http', function($scope, $interval, $http ){
-  function pingServer(){
-    $http.get('/transacs/ping').success(function(){
-      $scope.alert.on = false;
-      $interval(pingServer, 5000, 1);
-    }).error(function(){
-      $scope.alert.message = 'Server is unreachable !!!';
-      $scope.alert.on = true;
-      $scope.alert.class = 'alert-danger';
-      $interval(pingServer, 5000, 1);
-    });
+app.controller('MainCtrl', function( ){});
+
+app.controller('AlertCtrl', ['$scope', '$rootScope', '$timeout', 'ServerHeartBeat', function($scope, $rootScope, $timeout, ServerHeartBeat ){
+  function classFromStatus(status){
+    switch(status){
+      case 'error':
+        return 'alert-danger';
+      case 'info':
+        return 'alert-info';
+      case 'success':
+        return 'alert-success';
+      case 'warning':
+        return 'alert-warning';
+      default:
+        return 'alert-info';
+    }
+  }
+
+  function clearAlert(){
+    $scope.alert.show = false;
   }
 
   $scope.alert = {};
-  $scope.alert.message = 'Checking server connexion ...';
-  $scope.alert.on = true;
-  $scope.alert.class = 'alert-info';
-  $interval(pingServer, 1000, 1);
+
+  $scope.$on('Alert', function(event, arg){
+    console.log(arg);
+    $scope.alert.message = arg.message;
+    $scope.alert.show = true;
+    $timeout(clearAlert, arg.delay || 1000);
+    $scope.alert.class = classFromStatus(arg.status);
+  });
+
+  $rootScope.$broadcast('Alert', {message: 'Checking Server Connexion ...', status: 'info', delay: 1000});
+  $timeout(function(){
+    ServerHeartBeat.start(); 
+  }, 500);
 
 }]);
 

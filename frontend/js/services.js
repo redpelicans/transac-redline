@@ -114,3 +114,23 @@ services.factory('TransacHistoryLoader', ['Transac', '$route', '$q', function(Tr
   }
 }]);
 
+services.factory('ServerHeartBeat', ['$rootScope', '$interval', '$http', function($rootScope, $interval, $http){
+  var status ;
+  function pingServer(){
+    $http.get('/transacs/ping').success(function(){
+      if(status !== 'running'){
+        status = 'running';
+        $rootScope.$broadcast('Alert', {message: 'Server Connexion Running', status: 'success', delay: 2000})
+      }
+      $interval(pingServer, 5000, 1);
+    }).error(function(){
+      status = 'error';
+      $rootScope.$broadcast('Alert', {message: 'Server Connexion Lost !!!', status: 'error', delay: 1000})
+      $interval(pingServer, 5000, 1);
+    });
+  }
+
+  return {
+    start: function(){ pingServer() }
+  }
+}]);

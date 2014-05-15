@@ -42,7 +42,7 @@
       <div ng-view class="view-frame"> </div>
     </div>
 
-    <div ng-show="alert.on" ng-class="alert.class" class="alert alert-panel" ng-bind="alert.message" ></div>
+    <div ng-controller="AlertCtrl" ng-show="alert.show" ng-class="alert.class" class="alert alert-panel" ng-bind="alert.message" ></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
