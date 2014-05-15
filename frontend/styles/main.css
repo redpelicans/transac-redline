@@ -197,3 +197,10 @@ body {
 .event_abort { background-image: url(/images/abort.png); background-repeat: no-repeat;}
 .event_warning { background-image: url(/images/warning.png); background-repeat: no-repeat;}
 
+.alert-panel{
+  bottom: 0px;
+  position: fixed;
+  width: 400px;
+  right: 1%;
+}
+

@@ -5,7 +5,6 @@ transac-redline
 [![Dependency Status](https://david-dm.org/redpelicans/transac-redline.png)](https://david-dm.org/redpelicans/transac-redline) 
 [![Coverage Status](https://coveralls.io/repos/redpelicans/transac-redline/badge.png?branch=master)](https://coveralls.io/r/redpelicans/transac-redline?branch=master)
 
-[![NPM](https://nodei.co/npm/transac-redline.png)](https://nodei.co/npm/transac-redline/)
 
 
 transac-redline is a centralized  logging system aimed at helping monitoring business applications.
@@ -23,8 +22,14 @@ It's neither Nagios nor syslog, it's more business oriented, rather than system,
 
 ### Usage
 
+First setup params.js, see below, to point to your favorite mongo database, then:
+
 ```javascript 
-npm install transac-redline
+$ git clone https://github.com/redpelicans/transac-redline.git 
+$ cd transac-redline
+$ npm install
+$ bower install
+$ grunt serve:dist
 ```
 
 Setup params.js like this:
@@ -42,33 +47,10 @@ module.exports = {
 };
 ```
 
-Write an express server to mount `transac-redline` on it:
 
-```javascript 
-var transac = require('transac-redline')
-  , express = require('express')
-  , connect = require('connect')
-  , http = require('http')
-  , app = express()
-  , params = require('./params')
-  , httpServer = http.createServer(app);
-
-transac.start(params.transac, function(err, transacApp){
-  httpServer.listen(params.http.port, function() {
-    console.log("HTTP server listening on port: " + params.http.port);
-
-    app.use(express.bodyParser());
-    app.use(connect.logger('short'));
-    app.use('/', transacApp);
-  });
-});
-
-```
-
-That's all your server is up. Point your brower on "http://localhost:3002/transacs/index.html" an transac again and again ...
+That's all your server is up. Point your brower on "http://localhost:3002" an transac again and again ...
 To initate transacs you need to use one the clients available (see NPM 'client-transac-redline').
 
-All the code above is packaged in the 'server' directory of the distribution.
 
 
 ### Concepts
