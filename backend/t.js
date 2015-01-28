@@ -2,7 +2,7 @@
 'use strict';
 
 var mongoRedline = require('mongodb').MongoClient
-  , _ = require('underscore')
+  , _ = require('lodash')
 
 
 

@@ -3,7 +3,7 @@ var redMongo = require('mongo-redline')
     , ObjectID = redMongo.ObjectID
     , moment = require('moment')
     , async = require('async')
-    , _ = require('underscore');
+    , _ = require('lodash');
 
 var Event = function(options){
   this.time = new Date();

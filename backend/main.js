@@ -11,16 +11,12 @@ var async = require('async')
 
   async.waterfall([mongoConnect(params.db), transacStart(params, transac)], function(err, transacApp){
     if(err){
-      console.err(err);
+      console.error(err);
       return process.exit(1);
     }
 
     console.log("HTTP server listening on port: " + params.http.port);
-    //app.use(express.static(__dirname + '../frontend'));
     app.use(express.static(__dirname + '/../' + params.frontendApp));
-    // app.use(require('connect-livereload')({
-    //   port: 35729
-    // }));
     app.use(morgan({format: 'dev', skip: function(req, res){
       var r = /\/ping/;
       return r.exec(req.url);

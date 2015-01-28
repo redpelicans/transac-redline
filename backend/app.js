@@ -6,7 +6,7 @@ var Transac = require('./transac')
     , async = require('async')
     , moment = require('moment')
     , redMongo = require('mongo-redline')
-    , _ = require('underscore');
+    , _ = require('lodash');
 
 module.exports.start = function(cb){
   var app = express();
@@ -60,6 +60,7 @@ module.exports.start = function(cb){
     
     Transac.loadOrCreateFromOptions(options, function(err, transac){
       if(err) {
+        console.log(err);
         if(err.code) res.status(418).json(err);
         else res.status(500).json(err);
       }else res.json(transac.toSummaryJSON());
