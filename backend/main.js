@@ -11,7 +11,7 @@ var async = require('async')
 
   async.waterfall([mongoConnect(params.db), transacStart(params, transac)], function(err, transacApp){
     if(err){
-      console.err(err);
+      console.error(err);
       return process.exit(1);
     }
 
