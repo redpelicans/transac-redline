@@ -13,7 +13,7 @@ It's a very pragmatic and simple system made of a restful HTTP server based on n
 
 Ruby, python, perl clients are not yet available, node's one is the NPM package called [transac](https://github.com/redpelicans/transac.git).
 
-The node version is quite new, but the a previous version in ruby was in use for many years in very constraints production environments.
+The node version is used in production, and a previous version in ruby was in use for many years in very constraints production environments.
 
 If you have to monitor results of many processes / batches (made in different languages) and you want to identify quickly their states, and in case of failure see why they failed, this tool is for you.
 
@@ -21,6 +21,10 @@ It's neither Nagios nor syslog, it's more business oriented, rather than system,
  
 
 ### Usage
+
+The best way to run it is to use the [Docker image](https://github.com/redpelicans/transac-docker.git).
+
+Without Docker do :
 
 First setup params.js, see below, to point to your favorite mongo database, then:
 
