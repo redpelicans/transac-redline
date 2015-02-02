@@ -1,17 +1,17 @@
-transac
+transacd
 ===============
 
-[![Build Status](https://travis-ci.org/redpelicans/transac.png)](https://travis-ci.org/redpelicans/transac) 
-[![Dependency Status](https://david-dm.org/redpelicans/transac.png)](https://david-dm.org/redpelicans/transac) 
-[![Coverage Status](https://coveralls.io/repos/redpelicans/transac/badge.png?branch=master)](https://coveralls.io/r/redpelicans/transac?branch=master)
+[![Build Status](https://travis-ci.org/redpelicans/transacd.png)](https://travis-ci.org/redpelicans/transacd) 
+[![Dependency Status](https://david-dm.org/redpelicans/transacd.png)](https://david-dm.org/redpelicans/transac) 
+[![Coverage Status](https://coveralls.io/repos/redpelicans/transacd/badge.png?branch=master)](https://coveralls.io/r/redpelicans/transacd?branch=master)
 
 
 
-transac is a centralized  logging system aimed at helping monitoring business applications.
+transacd is a centralized  logging system aimed at helping monitoring business applications.
 
 It's a very pragmatic and simple system made of a restful HTTP server based on node.js and mongodb, a HTML single page application written with angularjs and clients (node.js, ruby, python, perl, ...).
 
-Ruby, python, perl clients are not yet available, node's one is the NPM package called 'transac-cli'.
+Ruby, python, perl clients are not yet available, node's one is the NPM package called [transac](https://github.com/redpelicans/transac.git).
 
 The node version is quite new, but the a previous version in ruby was in use for many years in very constraints production environments.
 
@@ -25,8 +25,8 @@ It's neither Nagios nor syslog, it's more business oriented, rather than system,
 First setup params.js, see below, to point to your favorite mongo database, then:
 
 ```javascript 
-$ git clone https://github.com/redpelicans/transac.git 
-$ cd transac
+$ git clone https://github.com/redpelicans/transacd.git 
+$ cd transacd
 $ npm install
 $ bower install
 $ grunt serve:dist
@@ -49,7 +49,7 @@ module.exports = {
 
 
 That's all your server is up. Point your brower on "http://localhost:3002" an transac again and again ...
-To initate transacs you need to use one the clients available (see NPM 'transac-cli').
+To initate transacs you need to use one the clients available (see NPM 'transac') [transac](https://github.com/redpelicans/transac.git).
 
 
 
