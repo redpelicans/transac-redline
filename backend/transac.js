@@ -1,5 +1,5 @@
 'use strict';
-var redMongo = require('mongo-redline')
+var redMongo = require('mongobless')
     , ObjectID = redMongo.ObjectID
     , moment = require('moment')
     , async = require('async')

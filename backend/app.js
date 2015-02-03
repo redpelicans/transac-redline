@@ -5,13 +5,16 @@ var Transac = require('./transac')
     , bodyParser = require('body-parser')
     , async = require('async')
     , moment = require('moment')
-    , redMongo = require('mongo-redline')
+    , redMongo = require('mongobless')
     , _ = require('lodash');
 
 module.exports.start = function(cb){
   var app = express();
 
-  app.use(bodyParser());
+  app.use(bodyParser({limit: '10mb'}));
+  // app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));                                                                                                                    
+  // app.use(bodyParser.json({limit: '10mb', extended: true}));
+
   app.put('/transacs/:id/events', createEvent);
   app.get('/transacs/ping', ping);
   app.get('/transacs/:id', loadTransac);
@@ -36,7 +39,7 @@ module.exports.start = function(cb){
       if(name)query['name'] = name;
 
     Transac.findAll(query, function(err, transacs){
-      if(err) res.status(500).json(err);
+      if(err) return next(err);
       res.json(_.map(transacs, function(transac){return transac.toSummaryJSON()}));
     });
 
@@ -45,7 +48,7 @@ module.exports.start = function(cb){
   function loadTransac(req, res, next){
     var transacId = redMongo.ObjectID(req.params.id)
     Transac.load(transacId, function(err, transac){
-      if(err) return res.status(500).json(err);
+      if(err) return next(err);
       if(!transac) return res.status(418).json({message: "Unknown transac", code: 'notransac'});
       res.json(transac.toJSON());
     })
@@ -60,9 +63,8 @@ module.exports.start = function(cb){
     
     Transac.loadOrCreateFromOptions(options, function(err, transac){
       if(err) {
-        console.log(err);
         if(err.code) res.status(418).json(err);
-        else res.status(500).json(err);
+        else next(err);
       }else res.json(transac.toSummaryJSON());
     });
   }
@@ -75,7 +77,7 @@ module.exports.start = function(cb){
     Transac.addEventFromOptions(transacId, options, function(err, event){
       if(err){
         if(err.code) res.status(418).json(err);
-        else res.status(500).json(err);
+        else next(err);
       }else res.json(event.toJSON());
     });
   }

@@ -4,7 +4,7 @@
 var Transac = require('../transac')
   , should = require('should')
   , assert = require('assert')
-  , mongoRedline = require('mongo-redline')
+  , mongoRedline = require('mongobless')
   , database = 'tests'
   , valueDate = new Date(2014, 0, 1);
 

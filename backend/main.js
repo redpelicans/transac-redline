@@ -2,7 +2,7 @@
 
 //var transac = require('transac-redline')
 var async = require('async')
-  , redMongo = require('mongo-redline')
+  , redMongo = require('mongobless')
   , express = require('express')
   , app = express()
   , morgan = require('morgan')
@@ -21,10 +21,20 @@ var async = require('async')
       var r = /\/ping/;
       return r.exec(req.url);
     }}));
+
     app.use('/', transacApp);
+
+    app.use(function(err, req, res, next) {
+      if (!err) return next();
+      var message = err.message || err.toString();
+      console.error(err.stack);
+      res.status(500).json({message: message});
+    })
+
+
     app.listen(params.http.port);
     console.log('Ready to transac with U ...');
-    console.log("To enable debug mode do 'kill -s USR1 " + process.pid + "'");
+    //console.log("To enable debug mode do 'kill -s USR1 " + process.pid + "'");
   });
 
 function mongoConnect(options){

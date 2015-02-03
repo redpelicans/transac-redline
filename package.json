@@ -1,6 +1,6 @@
 {
-  "name": "transac-redline",
-  "version": "0.3.2",
+  "name": "transacd",
+  "version": "0.4.0",
   "description": "Centralized logging System to monitor business applications",
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "express": "4.11.x",
     "lodash": "^3.0.0",
     "moment": "2.9.x",
-    "mongo-redline": "latest",
+    "mongobless": "latest",
     "morgan": "latest",
     "underscore": "1.6.x"
   },
