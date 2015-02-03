@@ -12,8 +12,7 @@ module.exports.start = function(cb){
   var app = express();
 
   app.use(bodyParser({limit: '10mb'}));
-  // app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));                                                                                                                    
-  // app.use(bodyParser.json({limit: '10mb', extended: true}));
+  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.put('/transacs/:id/events', createEvent);
   app.get('/transacs/ping', ping);
