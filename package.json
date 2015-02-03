@@ -1,6 +1,6 @@
 {
   "name": "transacd",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Centralized logging System to monitor business applications",
   "repository": {
     "type": "git",
