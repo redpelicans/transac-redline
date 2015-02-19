@@ -40,17 +40,18 @@ Setup params.js like this:
 
 ```javascript 
 module.exports = {
-  http:{
-    port: 3002,
-  },
-  transac: {
+  frontendApp: 'frontend',
+  http:{ port: 3002 },
+  db: {
     host: 'localhost',
     port: 27017,
     database: 'transacs',
   },
 };
 ```
-
+```javascript 
+   $ node backend/main.js
+```
 
 That's all your server is up. Point your brower on "http://localhost:3002" an transac again and again ...
 To initate transacs you need to use one the clients available (see NPM 'transac') [transac](https://github.com/redpelicans/transac.git).
