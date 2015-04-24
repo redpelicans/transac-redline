@@ -2,11 +2,19 @@ module.exports = {
   frontendApp: 'frontend',
   http:{port: 80},
   db: {
-    host: 'mongo',
-    port: 27017,
+    replicaSet:{
+      servers:[
+        {
+          host: 'mongo',
+          port: 27017
+        }
+      ],
+      options:{
+        auto_reconnect: true,
+        poolSize: 10,
+      }
+    },
     database: 'transacs',
-    auto_reconnect: true,
-    poolSize: 10, 
     w: 1, 
     strict: true, 
     native_parser: true
