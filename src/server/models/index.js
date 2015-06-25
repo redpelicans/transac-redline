@@ -47,9 +47,9 @@ class Node {
     function iterate(nodes){
       let child = nodes[0];
       if(!child) return [null, []];
-      if(child.isLeaf() || done[child._id]) return [child, nodes.slice(1)];
+      if(child.isLeaf() || done[child.id]) return [child, nodes.slice(1)];
       nodes.splice(0, 0, ...child.children);
-      done[child._id] = true;
+      done[child.id] = true;
       return iterate(nodes);
     }
 

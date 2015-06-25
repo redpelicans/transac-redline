@@ -37,7 +37,7 @@ describe('Compound Transac Helper', () => {
     });
   });
 
-  it('findOne', (cb) => {
+  it('FindOne', (cb) => {
     let data = {label: TRANSAC.label, valueDate: TRANSAC.valueDate};
     transac.findOne(CONN, data, (err, transac) => {
       should(err).be.null;
@@ -67,7 +67,7 @@ describe('Compound Transac Helper', () => {
   });
 
 
-  it('loadAll', (cb) => {
+  it('LoadAll', (cb) => {
     transac.loadAll(CONN,  {label: TRANSAC.label, from: moment(TRANSAC.valueDate).startOf('day').toDate(), dateMode: 'valueDate'}, (err, transacs) => {
       should(err).be.null;
       should(transacs.length).eql(1);
@@ -77,7 +77,15 @@ describe('Compound Transac Helper', () => {
       cb();
     });
   });
-  
+
+  it('Iterate', (cb) => {
+    transac.loadAll(CONN,  {label: TRANSAC.label, from: moment(TRANSAC.valueDate).startOf('day').toDate(), dateMode: 'valueDate'}, (err, transacs) => {
+      should(err).be.null;
+      let ts = [...transacs[0]];
+      should(ts.length).eql(3);
+      cb();
+    });
+  });
   // it('Add Info Event', (cb) => {
   //   let data = {type: 'info', label: 'label', message: 'message'};
   //   transac.addEvent(CONN, foundTransac1.id, data, (err, event, transac) => {

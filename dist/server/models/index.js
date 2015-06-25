@@ -108,9 +108,9 @@ var Node = (function () {
 
           var child = nodes[0];
           if (!child) return [null, []];
-          if (child.isLeaf() || done[child._id]) return [child, nodes.slice(1)];
+          if (child.isLeaf() || done[child.id]) return [child, nodes.slice(1)];
           nodes.splice.apply(nodes, [0, 0].concat(_toConsumableArray(child.children)));
-          done[child._id] = true;
+          done[child.id] = true;
           _x8 = nodes;
           _again2 = true;
           continue _function2;
