@@ -38,19 +38,17 @@ var _helpers = require('../helpers');
 function loadOrCreate(conn, options, cb) {
   findOne(conn, options, function (err, transac) {
     if (err) return cb(err);
-    if (!transac) return insertOne(conn, options, cb);
+    if (!transac) return insertOne(conn, options, null, cb);
     if (transac.isLocked()) return cb(new _helpers.TransacError('Transaction already locked', 'locked'));
-    if (transac.isCompound() && options.compound) {
-      options.transacId = transac.transacId;
-    }
-    insertOne(conn, options, cb);
+    if (transac.isCompound() && options.compound) return insertOne(conn, options, transac, cb);
+    insertOne(conn, options, null, cb);
   });
 }
 
 // export to be tested
 
 function findOne(conn, options, cb) {
-  var query = _rethinkdb2['default'].table(_models.Transac.collection).filter({ label: options.label, type: 'transac' });
+  var query = _rethinkdb2['default'].table(_models.Transac.collection).filter(_rethinkdb2['default'].row.hasFields('parentId').not()).filter({ label: options.label, type: 'transac' });
 
   if (options.valueDate) {
     (function () {
@@ -110,74 +108,96 @@ function loadAll(conn, _x, cb) {
 }
 
 function load(conn, id, cb) {
-  _rethinkdb2['default'].table(_models.Transac.collection).filter({ transacId: id }).orderBy(_rethinkdb2['default'].asc('createdAt')).run(conn, function (err, nodes) {
+  _rethinkdb2['default'].table(_models.Transac.collection).filter({ transacId: id }).orderBy(_rethinkdb2['default'].asc('createdAt')).run(conn, function (err, cursor) {
     if (err) return cb(err);
-    var root = undefined,
-        hnodes = _lodash2['default'].inject(nodes, function (res, node) {
-      res[node.id] = node;return res;
-    }, {});
+    cursor.toArray(function (err, nodes) {
+      if (err) return cb(err);
+      var root = undefined,
+          hnodes = _lodash2['default'].inject(nodes, function (res, node) {
+        res[node.id] = (0, _models.bless)(node);return res;
+      }, {});
 
-    _lodash2['default'].each(nodes, function (node) {
-      var tnode = (0, _models.bless)(node);
-      if (tnode.isTransac() && tnode.isCompound()) {
-        if (!root) root = new _models.Transac.makeCompoundRoot(tnode);
-        root.addChild(tnode);
-      } else {
-        if (!tnode.parentId) root = tnode;else {
+      _lodash2['default'].each(nodes, function (node) {
+        var tnode = hnodes[node.id];
+        if (!tnode.parentId) {
+          root = tnode;
+        } else {
           var _parent = hnodes[tnode.parentId];
           if (!_parent) {
-            console.log(tnode);
             return cb(new Error('Wrong Transac Tree'));
           }
           _parent.addChild(tnode);
         }
-      }
+      });
+      cb(null, root);
     });
-    cb(null, root);
   });
 }
 
-function insertOne(conn, options, cb) {
-  var transac = new _models.Transac(options);
-  _rethinkdb2['default'].table(_models.Transac.collection).insert(transac, { returnChanges: true }).run(conn, function (err, res) {
-    if (err) return cb(err);
-    cb(null, transac);
-  });
+function insertOne(conn, options, root, cb) {
+  if (!options.compound) {
+    (function () {
+      var transac = new _models.Transac(options);
+      _rethinkdb2['default'].table(_models.Transac.collection).insert(transac, { returnChanges: true }).run(conn, function (err, res) {
+        if (err) return cb(err);
+        cb(null, transac);
+      });
+    })();
+  } else {
+    var transacs = undefined;
+    if (options.compound && !root) {
+      root = new _models.Transac(options);
+      transacs = [root, new _models.Transac(_lodash2['default'].merge({ transacId: root.id, parentId: root.id }, options))];
+    } else {
+      options.transacId = root.transacId;
+      options.parentId = root.id;
+      transacs = [new _models.Transac(options)];
+    }
+    _rethinkdb2['default'].table(_models.Transac.collection).insert(transacs, { returnChanges: true }).run(conn, function (err, res) {
+      if (err) return cb(err);
+      cb(null, root);
+    });
+  }
 }
 
 function addEvent(conn, id, options, cb) {
   _async2['default'].waterfall([load.bind(null, conn, id), function (transac, cb) {
     if (!transac) return setImmediate(cb, new Error('Unknown transaction'));
-    addEventTransac(conn, transac, options, function (err, event, transac) {
-      if (err) return cb(err);
-      addMessage(conn, transac, event, options, cb);
-    });
+    var targetTransac = transac.isCompound() ? transac.lastChild : transac,
+        recipe = options.label ? [addEventTransac(conn, targetTransac, options), addMessages.bind(null, conn, targetTransac, options)] : [addMessages.bind(null, conn, targetTransac, options, targetTransac)];
+    _async2['default'].waterfall(recipe, cb);
   }], cb);
 }
 
-function addEventTransac(conn, transac, options, cb) {
-  try {
-    (function () {
-      options.transacId = transac.id;
-      var event = new _models.Event(options);
-      transac.addEvent(event);
-      _rethinkdb2['default'].table(_models.Transac.collection).insert(event, { returnChanges: true }).run(conn, function (err, res) {
-        if (err) return cb(err);
-        cb(null, event, transac);
-      });
-    })();
-  } catch (e) {
-    setImmediate(cb, e);
-  }
+function addEventTransac(conn, transac, options) {
+  return function (cb) {
+    try {
+      (function () {
+        options.transacId = transac.transacId;
+        var event = new _models.Event(options);
+        transac.addEvent(event);
+        _rethinkdb2['default'].table(_models.Transac.collection).insert(event, { returnChanges: true }).run(conn, function (err, res) {
+          if (err) return cb(err);
+          cb(null, event);
+        });
+      })();
+    } catch (e) {
+      setImmediate(cb, e);
+    }
+  };
 }
 
-function addMessage(conn, transac, event, options, cb) {
+function addMessages(conn, transac, options, parent, cb) {
   try {
-    var message = new _models.Message({ label: options.message, transacId: options.transacId });
-    event.addChild(message);
-    _rethinkdb2['default'].table(_models.Transac.collection).insert(message, { returnChanges: true }).run(conn, function (err, res) {
+    var messages = _lodash2['default'].map(options.messages, function (message) {
+      return new _models.Message({ label: message, level: options.level, transacId: transac.transacId });
+    });
+    _lodash2['default'].each(messages, function (message) {
+      return parent.addChild(message);
+    });
+    _rethinkdb2['default'].table(_models.Transac.collection).insert(messages, { returnChanges: true }).run(conn, function (err, res) {
       if (err) return cb(err);
-      cb(null, event, transac);
+      cb(null, transac);
     });
   } catch (e) {
     setImmediate(cb, e);

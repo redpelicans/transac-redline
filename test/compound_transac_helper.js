@@ -6,6 +6,8 @@ import  moment from "moment";
 import * as transac  from '../src/server/helpers/transac';
 import * as DB from './helpers/db';
 import params from "./params";
+//import 'better-log/install';
+
 
 const TRANSAC = {
     label: 'T2' 

@@ -16,6 +16,8 @@ var _debug = require('debug');
 
 var _debug2 = _interopRequireDefault(_debug);
 
+require('better-log').install();
+
 var logerror = (0, _debug2['default'])('transac:error'),
     loginfo = (0, _debug2['default'])('transac:info');
 

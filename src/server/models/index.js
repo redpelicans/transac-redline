@@ -75,6 +75,10 @@ class Node {
     return _.some(this.children, function(child){return _.contains(statuses, child.status)});
   }
 
+  hasLevel(level){
+    return _.some(this.children, function(child){return child.level === level});
+  }
+
   get length(){
     return this.children.length;
   }
@@ -83,8 +87,14 @@ class Node {
     return this.children && this.children[this.length - 1];
   }
 
-  get lastEventTime(){
-    return this.Child && this.lastChild.createdAt;
+  get lastMessage(){
+    let nodes = _.filter([...this], node => node.isMessage());
+    return nodes[nodes.length-1];
+  }
+
+  get lastMessageTime(){
+    let lastMessage = this.lastMessage;
+    return lastMessage && lastMessage.createdAt;
   }
 
 
@@ -148,11 +158,14 @@ export class Transac extends Node {
   }
 
   isRunning(){
-    return !this.hasStatuses(['abort', 'commit']);
+    //return !this.hasStatuses(['abort', 'commit']);
+    let lastMessage = this.lastMessage;
+    return !lastMessage || !_.contains(['abort', 'commit'], lastMessage.level);
   }
 
   get delay(){
-    if(this.lastChild) return this.lastChild.createdAt - this.createdAt;
+    let lastMessage = this.lastMessage;
+    if(lastMessage) return lastMessage.createdAt - this.createdAt;
     else return 0;
   }
 
@@ -163,7 +176,7 @@ export class Transac extends Node {
       label: this.label,
       valueDate: dmy(this.valueDate),
       createdAt: +this.createdAt,
-      lastEventTime: this.lastEventTime && +this.lastEventTime,
+      lastMessageTime: this.lastMessageTime && +this.lastMessageTime,
       locked: this.isLocked(),
       status: this.status,
       isRunning: this.isRunning(),
@@ -173,26 +186,45 @@ export class Transac extends Node {
     }
   }
 
+  toJSON(){
+    return {
+      id: this.id,
+      type: this.type,
+      transacId: this.transacId,
+      label: this.label,
+      valueDate: dmy(this.valueDate),
+      createdAt: +this.createdAt,
+      lastMessageTime: this.lastMessageTime && +this.lastMessageTime,
+      locked: this.isLocked(),
+      status: this.status,
+      isRunning: this.isRunning(),
+      isCompound: this.isCompound(),
+      server: this.server,
+      processId: this.processId,
+      user: this.user,
+      delay: this.delay,
+      children: _.map(this.children, child => child.toJSON()),
+    }
+  }
+
+
 }
 
 
 export class Event extends Node{
-  constructor({transacId, parentId, level='ok', label} = {}){
+  constructor({transacId, parentId, label} = {}){
     super({label: label, transacId: transacId, parentId: parentId, type: 'event'});
-    this.level = level;
-  }
-
-  get status(){
-    if(this.level === 'abort' || this.level === 'error')return 'error';
-    if(this.level === 'warning')return 'warning';
-    return 'ok';
   }
 
   toJSON(){
     return {
+      id: this.id,
+      type: this.type,
+      transacId: this.transacId,
+      status: this.status,
       label: this.label,
-      createdAt: +this.createdAt,
-      type: this.type
+      children: _.map(this.children, child => child.toJSON()),
+      createdAt: +this.createdAt
     }
   }
 }
@@ -211,9 +243,13 @@ export class Message extends Node{
 
   toJSON(){
     return {
+      id: this.id,
+      type: this.type,
+      transacId: this.transacId,
       label: this.label,
-      createdAt: +this.createdAt,
-      type: this.type
+      level: this.level,
+      status: this.status,
+      createdAt: +this.createdAt
     }
   }
 }

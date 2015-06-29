@@ -56,13 +56,13 @@ export function init(params, $, cb){
 
   function createEvent(req, res, next){
     var transacId = req.params.id
-      , options = _.pick(req.body, 'level', 'label', 'message');
+      , options = _.pick(req.body, 'level', 'label', 'messages');
 
-    transacs.addEvent($.conn, transacId, options, function(err, event){
+    transacs.addEvent($.conn, transacId, options, function(err, transac){
       if(err){
         if(err instanceof TransacError) res.status(418).json(err);
         else next(err);
-      }else res.json(event.toJSON());
+      }else res.status(200).end();
     });
   }
 

@@ -145,6 +145,13 @@ var Node = (function () {
       });
     }
   }, {
+    key: 'hasLevel',
+    value: function hasLevel(level) {
+      return _lodash2['default'].some(this.children, function (child) {
+        return child.level === level;
+      });
+    }
+  }, {
     key: 'length',
     get: function () {
       return this.children.length;
@@ -155,9 +162,18 @@ var Node = (function () {
       return this.children && this.children[this.length - 1];
     }
   }, {
-    key: 'lastEventTime',
+    key: 'lastMessage',
     get: function () {
-      return this.Child && this.lastChild.createdAt;
+      var nodes = _lodash2['default'].filter([].concat(_toConsumableArray(this)), function (node) {
+        return node.isMessage();
+      });
+      return nodes[nodes.length - 1];
+    }
+  }, {
+    key: 'lastMessageTime',
+    get: function () {
+      var lastMessage = this.lastMessage;
+      return lastMessage && lastMessage.createdAt;
     }
   }]);
 
@@ -236,12 +252,15 @@ var Transac = (function (_Node) {
   }, {
     key: 'isRunning',
     value: function isRunning() {
-      return !this.hasStatuses(['abort', 'commit']);
+      //return !this.hasStatuses(['abort', 'commit']);
+      var lastMessage = this.lastMessage;
+      return !lastMessage || !_lodash2['default'].contains(['abort', 'commit'], lastMessage.level);
     }
   }, {
     key: 'delay',
     get: function () {
-      if (this.lastChild) return this.lastChild.createdAt - this.createdAt;else return 0;
+      var lastMessage = this.lastMessage;
+      if (lastMessage) return lastMessage.createdAt - this.createdAt;else return 0;
     }
   }, {
     key: 'toSummaryJSON',
@@ -252,7 +271,7 @@ var Transac = (function (_Node) {
         label: this.label,
         valueDate: (0, _helpers.dmy)(this.valueDate),
         createdAt: +this.createdAt,
-        lastEventTime: this.lastEventTime && +this.lastEventTime,
+        lastMessageTime: this.lastMessageTime && +this.lastMessageTime,
         locked: this.isLocked(),
         status: this.status,
         isRunning: this.isRunning(),
@@ -260,6 +279,29 @@ var Transac = (function (_Node) {
         server: this.server,
         delay: this.delay
       };
+    }
+  }, {
+    key: 'toJSON',
+    value: function toJSON() {
+      return {
+        id: this.id,
+        type: this.type,
+        transacId: this.transacId,
+        label: this.label,
+        valueDate: (0, _helpers.dmy)(this.valueDate),
+        createdAt: +this.createdAt,
+        lastMessageTime: this.lastMessageTime && +this.lastMessageTime,
+        locked: this.isLocked(),
+        status: this.status,
+        isRunning: this.isRunning(),
+        isCompound: this.isCompound(),
+        server: this.server,
+        processId: this.processId,
+        user: this.user,
+        delay: this.delay,
+        children: _lodash2['default'].map(this.children, function (child) {
+          return child.toJSON();
+        }) };
     }
   }], [{
     key: 'collection',
@@ -287,32 +329,28 @@ var Event = (function (_Node2) {
 
     var transacId = _ref4.transacId;
     var parentId = _ref4.parentId;
-    var _ref4$level = _ref4.level;
-    var level = _ref4$level === undefined ? 'ok' : _ref4$level;
     var label = _ref4.label;
 
     _classCallCheck(this, Event);
 
     _get(Object.getPrototypeOf(Event.prototype), 'constructor', this).call(this, { label: label, transacId: transacId, parentId: parentId, type: 'event' });
-    this.level = level;
   }
 
   _inherits(Event, _Node2);
 
   _createClass(Event, [{
-    key: 'status',
-    get: function () {
-      if (this.level === 'abort' || this.level === 'error') return 'error';
-      if (this.level === 'warning') return 'warning';
-      return 'ok';
-    }
-  }, {
     key: 'toJSON',
     value: function toJSON() {
       return {
+        id: this.id,
+        type: this.type,
+        transacId: this.transacId,
+        status: this.status,
         label: this.label,
-        createdAt: +this.createdAt,
-        type: this.type
+        children: _lodash2['default'].map(this.children, function (child) {
+          return child.toJSON();
+        }),
+        createdAt: +this.createdAt
       };
     }
   }]);
@@ -351,9 +389,13 @@ var Message = (function (_Node3) {
     key: 'toJSON',
     value: function toJSON() {
       return {
+        id: this.id,
+        type: this.type,
+        transacId: this.transacId,
         label: this.label,
-        createdAt: +this.createdAt,
-        type: this.type
+        level: this.level,
+        status: this.status,
+        createdAt: +this.createdAt
       };
     }
   }]);

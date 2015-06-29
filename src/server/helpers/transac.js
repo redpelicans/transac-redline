@@ -9,16 +9,16 @@ import {TransacError} from '../helpers';
 export function loadOrCreate(conn, options, cb){
   findOne(conn, options, (err, transac) => {
     if(err) return cb(err);
-    if(!transac) return insertOne(conn, options, cb);
+    if(!transac) return insertOne(conn, options, null, cb);
     if(transac.isLocked()) return cb(new TransacError('Transaction already locked', 'locked'));
-    if(transac.isCompound() && options.compound){ options.transacId = transac.transacId }
-    insertOne(conn, options, cb);
+    if(transac.isCompound() && options.compound)return insertOne(conn, options, transac, cb);
+    insertOne(conn, options, null, cb);
   });
 }
 
 // export to be tested
 export function findOne(conn, options, cb){
-  let query = r.table(Transac.collection).filter({label: options.label, type: 'transac'});
+  let query = r.table(Transac.collection).filter(r.row.hasFields('parentId').not()).filter({label: options.label, type: 'transac'});
 
   if(options.valueDate){
     let from = moment(options.valueDate).startOf('day').toDate()
@@ -67,38 +67,51 @@ export function loadAll(conn, {label, from=moment().startOf('day').toDate(), to=
 }  
 
 export function load(conn, id, cb){
-  r.table(Transac.collection).filter({transacId: id}).orderBy(r.asc('createdAt')).run(conn, (err, nodes) => {
+  r.table(Transac.collection).filter({transacId: id}).orderBy(r.asc('createdAt')).run(conn, (err, cursor) => {
     if(err)return cb(err);
-    let root
-      , hnodes = _.inject(nodes, (res, node) => { res[node.id] = node; return res}, {});
+    cursor.toArray((err, nodes) => {
+      if(err)return cb(err);
+      let root, hnodes = _.inject(nodes, (res, node) => { res[node.id] = bless(node); return res}, {});
 
-    _.each(nodes, node => {
-      let tnode = bless(node);
-      if(tnode.isTransac() && tnode.isCompound()){
-          if(!root) root = new Transac.makeCompoundRoot(tnode);
-          root.addChild(tnode);
-      }else{
-        if(!tnode.parentId) root = tnode;
-        else{
+      _.each(nodes, node => {
+        let tnode = hnodes[node.id];
+        if(!tnode.parentId){
+          root = tnode;
+        }else{
           let parent = hnodes[tnode.parentId];
           if(!parent){
-            console.log(tnode)
             return cb(new Error("Wrong Transac Tree"));
           }
           parent.addChild(tnode);
         }
-      }
-    });
-    cb(null, root);
+      });
+      cb(null, root);
+    })
   })
 }
 
-function insertOne(conn, options, cb){
-  let transac = new Transac(options);
-  r.table(Transac.collection).insert( transac, {returnChanges: true} ).run(conn, (err, res) => {
-    if(err)return cb(err);
-    cb(null, transac);
-  });
+function insertOne(conn, options, root, cb){
+  if(!options.compound){
+    let transac = new Transac(options);
+    r.table(Transac.collection).insert( transac, {returnChanges: true} ).run(conn, (err, res) => {
+      if(err)return cb(err);
+      cb(null, transac);
+    });
+  }else{
+    let transacs;
+    if(options.compound && !root){
+      root = new Transac(options);
+      transacs = [root, new Transac(_.merge({transacId: root.id, parentId: root.id}, options))];
+    }else{
+      options.transacId = root.transacId;
+      options.parentId = root.id;
+      transacs = [new Transac(options)];
+    }
+    r.table(Transac.collection).insert( transacs, {returnChanges: true} ).run(conn, (err, res) => {
+      if(err)return cb(err);
+      cb(null, root);
+    });
+  }
 }
 
 export function addEvent(conn, id, options, cb){
@@ -106,35 +119,36 @@ export function addEvent(conn, id, options, cb){
     load.bind(null, conn, id),
     (transac, cb) => {
       if(!transac) return setImmediate(cb, new Error("Unknown transaction"));
-      addEventTransac(conn, transac, options, (err, event, transac)=>{
-        if(err)return cb(err);
-        addMessage(conn, transac, event, options, cb);
-      });
+      let targetTransac = transac.isCompound() ? transac.lastChild : transac
+        , recipe = options.label ? [addEventTransac(conn, targetTransac, options), addMessages.bind(null, conn, targetTransac, options)] : [addMessages.bind(null, conn, targetTransac, options, targetTransac)];
+      async.waterfall(recipe, cb);
     }
   ], cb); 
 }
 
-function addEventTransac(conn, transac, options, cb){
-  try{
-    options.transacId = transac.id;
-    let event = new Event(options);
-    transac.addEvent(event);
-    r.table(Transac.collection).insert( event, {returnChanges: true} ).run(conn, (err, res) => {
-      if(err)return cb(err);
-      cb(null, event, transac);
-    });
-  }catch(e){
-    setImmediate(cb, e);
+function addEventTransac(conn, transac, options){
+  return function(cb){
+    try{
+      options.transacId = transac.transacId;
+      let event = new Event(options);
+      transac.addEvent(event);
+      r.table(Transac.collection).insert( event, {returnChanges: true} ).run(conn, (err, res) => {
+        if(err)return cb(err);
+        cb(null, event);
+      });
+    }catch(e){
+      setImmediate(cb, e);
+    }
   }
 }
 
-function addMessage(conn, transac, event, options, cb){
+function addMessages(conn, transac, options, parent, cb){
   try{
-    let message = new Message({label: options.message, transacId: options.transacId});
-    event.addChild(message);
-    r.table(Transac.collection).insert( message, {returnChanges: true} ).run(conn, (err, res) => {
+    let messages = _.map(options.messages, message => new Message({label: message, level: options.level, transacId: transac.transacId}));
+    _.each(messages, message => parent.addChild(message));
+    r.table(Transac.collection).insert( messages, {returnChanges: true} ).run(conn, (err, res) => {
       if(err)return cb(err);
-      cb(null, event, transac);
+      cb(null, transac);
     });
   }catch(e){
     setImmediate(cb, e);
