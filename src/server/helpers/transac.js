@@ -71,6 +71,16 @@ export function loadAll(conn, {label, from=moment().startOf('day').toDate(), to=
   async.waterfall([findAll, loadTransacs], cb);
 }  
 
+function loadRoot(conn, id, cb){
+  r.table(Transac.collection).filter({transacId: id}).filter(r.row.hasFields('parentId').not()).run(conn, (err, cursor) => {
+    if(err)return cb(err);
+    cursor.toArray((err, nodes) => {
+      if(err)return cb(err);
+      cb(null, bless(nodes[0]));
+    })
+  })
+}
+
 export function load(conn, id, cb){
   r.table(Transac.collection).filter({transacId: id}).orderBy(r.asc('createdAt')).run(conn, (err, cursor) => {
     if(err)return cb(err);
@@ -123,9 +133,13 @@ function insertOne(conn, options, root, cb){
 export function addEvent(conn, id, options, cb){
   loginfo(`helper.transac.addEvent ...`);
   async.waterfall([
-    load.bind(null, conn, id),
+    loadRoot.bind(null, conn, id),
     (transac, cb) => {
       if(!transac) return setImmediate(cb, new Error("Unknown transaction"));
+      if(!transac.isCompound()) return setImmediate(cb, null, transac);
+      load(conn, id, cb);
+    },
+    (transac, cb) => {
       let targetTransac = transac.isCompound() ? transac.lastChild : transac
         , recipe = options.label ? [addEventTransac(conn, targetTransac, options), addMessages.bind(null, conn, targetTransac, options)] : [addMessages.bind(null, conn, targetTransac, options, targetTransac)];
       async.waterfall(recipe, (err) => {

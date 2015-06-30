@@ -1,9 +1,8 @@
 language: node_js
 node_js:
-  - "0.10"
+  - "iojs-v2.2.1"
 before_script:
-  - npm install -g grunt-cli
-after_script:
-  - npm run-script coveralls
-services: mongodb
+  - sudo add-apt-repository ppa:rethinkdb/ppa -y
+  - sudo apt-get update -q
+  - sudo apt-get install rethinkdb
 
