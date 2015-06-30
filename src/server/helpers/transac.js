@@ -5,6 +5,11 @@ import uuid from 'uuid';
 import async from 'async';
 import {Transac, Event, Message, bless} from '../models';
 import {TransacError} from '../helpers';
+import debug from 'debug';
+
+let logerror = debug('transac:error')
+  , loginfo = debug('transac:info');
+
 
 export function loadOrCreate(conn, options, cb){
   findOne(conn, options, (err, transac) => {
@@ -85,6 +90,7 @@ export function load(conn, id, cb){
           parent.addChild(tnode);
         }
       });
+      loginfo(`helper.transac.load`);
       cb(null, root);
     })
   })
@@ -115,13 +121,17 @@ function insertOne(conn, options, root, cb){
 }
 
 export function addEvent(conn, id, options, cb){
+  loginfo(`helper.transac.addEvent ...`);
   async.waterfall([
     load.bind(null, conn, id),
     (transac, cb) => {
       if(!transac) return setImmediate(cb, new Error("Unknown transaction"));
       let targetTransac = transac.isCompound() ? transac.lastChild : transac
         , recipe = options.label ? [addEventTransac(conn, targetTransac, options), addMessages.bind(null, conn, targetTransac, options)] : [addMessages.bind(null, conn, targetTransac, options, targetTransac)];
-      async.waterfall(recipe, cb);
+      async.waterfall(recipe, (err) => {
+        loginfo(`helper.transac.addEvent done`);
+        cb(err, transac);
+      });
     }
   ], cb); 
 }
@@ -132,8 +142,9 @@ function addEventTransac(conn, transac, options){
       options.transacId = transac.transacId;
       let event = new Event(options);
       transac.addEvent(event);
-      r.table(Transac.collection).insert( event, {returnChanges: true} ).run(conn, (err, res) => {
+      r.table(Transac.collection).insert( event, {returnChanges: true} ).run(conn, {durability: 'soft'}, (err, res) => {
         if(err)return cb(err);
+        loginfo(`helper.transac.addEventTransac done`);
         cb(null, event);
       });
     }catch(e){
@@ -146,8 +157,9 @@ function addMessages(conn, transac, options, parent, cb){
   try{
     let messages = _.map(options.messages, message => new Message({label: message, level: options.level, transacId: transac.transacId}));
     _.each(messages, message => parent.addChild(message));
-    r.table(Transac.collection).insert( messages, {returnChanges: true} ).run(conn, (err, res) => {
+    r.table(Transac.collection).insert( messages, {returnChanges: true} ).run(conn, {durability: 'soft'}, (err, res) => {
       if(err)return cb(err);
+      loginfo(`helper.transac.addMessages done`);
       cb(null, transac);
     });
   }catch(e){

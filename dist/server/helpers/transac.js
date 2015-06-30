@@ -35,6 +35,13 @@ var _models = require('../models');
 
 var _helpers = require('../helpers');
 
+var _debug = require('debug');
+
+var _debug2 = _interopRequireDefault(_debug);
+
+var logerror = (0, _debug2['default'])('transac:error'),
+    loginfo = (0, _debug2['default'])('transac:info');
+
 function loadOrCreate(conn, options, cb) {
   findOne(conn, options, function (err, transac) {
     if (err) return cb(err);
@@ -129,6 +136,7 @@ function load(conn, id, cb) {
           _parent.addChild(tnode);
         }
       });
+      loginfo('helper.transac.load');
       cb(null, root);
     });
   });
@@ -161,11 +169,15 @@ function insertOne(conn, options, root, cb) {
 }
 
 function addEvent(conn, id, options, cb) {
+  loginfo('helper.transac.addEvent ...');
   _async2['default'].waterfall([load.bind(null, conn, id), function (transac, cb) {
     if (!transac) return setImmediate(cb, new Error('Unknown transaction'));
     var targetTransac = transac.isCompound() ? transac.lastChild : transac,
         recipe = options.label ? [addEventTransac(conn, targetTransac, options), addMessages.bind(null, conn, targetTransac, options)] : [addMessages.bind(null, conn, targetTransac, options, targetTransac)];
-    _async2['default'].waterfall(recipe, cb);
+    _async2['default'].waterfall(recipe, function (err) {
+      loginfo('helper.transac.addEvent done');
+      cb(err, transac);
+    });
   }], cb);
 }
 
@@ -176,8 +188,9 @@ function addEventTransac(conn, transac, options) {
         options.transacId = transac.transacId;
         var event = new _models.Event(options);
         transac.addEvent(event);
-        _rethinkdb2['default'].table(_models.Transac.collection).insert(event, { returnChanges: true }).run(conn, function (err, res) {
+        _rethinkdb2['default'].table(_models.Transac.collection).insert(event, { returnChanges: true }).run(conn, { durability: 'soft' }, function (err, res) {
           if (err) return cb(err);
+          loginfo('helper.transac.addEventTransac done');
           cb(null, event);
         });
       })();
@@ -195,8 +208,9 @@ function addMessages(conn, transac, options, parent, cb) {
     _lodash2['default'].each(messages, function (message) {
       return parent.addChild(message);
     });
-    _rethinkdb2['default'].table(_models.Transac.collection).insert(messages, { returnChanges: true }).run(conn, function (err, res) {
+    _rethinkdb2['default'].table(_models.Transac.collection).insert(messages, { returnChanges: true }).run(conn, { durability: 'soft' }, function (err, res) {
       if (err) return cb(err);
+      loginfo('helper.transac.addMessages done');
       cb(null, transac);
     });
   } catch (e) {

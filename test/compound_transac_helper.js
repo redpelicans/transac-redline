@@ -59,27 +59,6 @@ describe('Compound Transac Helper', () => {
     });
   });
 
-  it('Load', (cb) => {
-    transac.load(CONN, foundTransac1.id, (err, transac) => {
-      should(err).be.null;
-      should(transac.status).equal('ok');
-      transac.children[0].id.should.eql(foundTransac1.id);
-      cb();
-    });
-  });
-
-
-  it('LoadAll', (cb) => {
-    transac.loadAll(CONN,  {label: TRANSAC.label, from: moment(TRANSAC.valueDate).startOf('day').toDate(), dateMode: 'valueDate'}, (err, transacs) => {
-      should(err).be.null;
-      should(transacs.length).eql(1);
-      let transac = transacs[0];
-      transac.children[0].id.should.eql(foundTransac1.id);
-      should(transac.transacId).eql(foundTransac1.id);
-      cb();
-    });
-  });
-
   it('Iterate', (cb) => {
     transac.loadAll(CONN,  {label: TRANSAC.label, from: moment(TRANSAC.valueDate).startOf('day').toDate(), dateMode: 'valueDate'}, (err, transacs) => {
       should(err).be.null;
@@ -88,34 +67,4 @@ describe('Compound Transac Helper', () => {
       cb();
     });
   });
-  // it('Add Info Event', (cb) => {
-  //   let data = {type: 'info', label: 'label', message: 'message'};
-  //   transac.addEvent(CONN, foundTransac1.id, data, (err, event, transac) => {
-  //     should(err).be.null;
-  //     should(transac.children[0].label).eql(data.label);
-  //     should(transac.children[0].message).eql(data.message);
-  //     should(transac.status).eql('ok');
-  //     cb();
-  //   });
-  // });
-  //
-  // it('Add Warning Event', (cb) => {
-  //   let data = {type: 'warning', label: 'label', message: 'message'};
-  //   transac.addEvent(CONN, foundTransac1.id, data, (err, event, transac) => {
-  //     should(err).be.null;
-  //     should(transac.status).eql('warning');
-  //     cb();
-  //   });
-  // });
-  //
-  // it('Add Error Event', (cb) => {
-  //   let data = {type: 'error', label: 'label', message: 'message'};
-  //   transac.addEvent(CONN, foundTransac1.id, data, (err, event, transac) => {
-  //     should(err).be.null;
-  //     should(transac.status).eql('error');
-  //     cb();
-  //   });
-  // });
-
-
 });
