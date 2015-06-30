@@ -17,7 +17,8 @@ export function init(opt, cb){
 
   function initConnection(cb){
     r.connect(params, (err, conn) => {
-      if(err) return cb(err);
+      //if(err) return cb(err);
+      if(err) throw err;
       loginfo(`RethinkDB connected to database '${params.db}'`);
       cb(null, conn);
     })
