@@ -22,8 +22,10 @@
     "url": "https://github.com/redpelicans/transacd/issues"
   },
   "homepage": "https://github.com/redpelicans/transacd",
+  "license": "Apache-2.0",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --timeout=10000 --require babelhook --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha --timeout=10000 --require babelhook --reporter spec",
+    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha  --report lcovonly -- --harmony  --es_staging --timeout=10000 --require babelhook -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose"
   },
   "dependencies": {
     "async": "*",
@@ -41,6 +43,7 @@
     "uuid": "^2.0.1"
   },
   "devDependencies": {
+    "coveralls": "^2.11.2",
     "gulp": "*",
     "gulp-babel": "*",
     "gulp-changed": "^1.2.1",
@@ -48,8 +51,10 @@
     "gulp-plumber": "^1.0.0",
     "gulp-sourcemaps": "*",
     "gulp-watch": "^4.2.4",
+    "istanbul": "^0.3.17",
     "merge-stream": "^0.1.7",
     "mocha": "^2.2.4",
+    "mocha-lcov-reporter": "0.0.2",
     "path": "^0.11.14",
     "run-sequence": "^1.1.0",
     "should": "^6.0.1",
