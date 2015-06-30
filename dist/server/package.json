@@ -1,0 +1,61 @@
+{
+  "name": "transacd",
+  "version": "2.0.0",
+  "description": "Centralized logging System to monitor business applications",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redpelicans/transacd.git"
+  },
+  "keywords": [
+    "transaction",
+    "NoSQL",
+    "log",
+    "production",
+    "io.js",
+    "node.js",
+    "rethinkdb",
+    "aureliajs",
+    "stream"
+  ],
+  "author": "eric.basley@redpelicans.com",
+  "bugs": {
+    "url": "https://github.com/redpelicans/transacd/issues"
+  },
+  "homepage": "https://github.com/redpelicans/transacd",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --timeout=10000 --require babelhook --reporter spec"
+  },
+  "dependencies": {
+    "async": "*",
+    "babel": "^5.5.8",
+    "babel-runtime": "^5.5.8",
+    "better-log": "^1.2.0",
+    "body-parser": "^1.13.0",
+    "cookie-parser": "^1.3.5",
+    "debug": "^2.2.0",
+    "express": "^4.12.4",
+    "lodash": "*",
+    "moment": "^2.10.3",
+    "morgan": "^1.6.0",
+    "rethinkdb": "^2.0.0-1",
+    "uuid": "^2.0.1"
+  },
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-babel": "*",
+    "gulp-changed": "^1.2.1",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-plumber": "^1.0.0",
+    "gulp-sourcemaps": "*",
+    "gulp-watch": "^4.2.4",
+    "merge-stream": "^0.1.7",
+    "mocha": "^2.2.4",
+    "path": "^0.11.14",
+    "run-sequence": "^1.1.0",
+    "should": "^6.0.1",
+    "source-map-support": "*"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

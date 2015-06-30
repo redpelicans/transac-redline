@@ -1,5 +1,3 @@
 node_modules
 *.swp
-*.map
-dist
 npm-debug.log
