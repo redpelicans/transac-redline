@@ -1,7 +1,7 @@
 transacd
 ===============
 [![Build Status](https://travis-ci.org/redpelicans/transacd.png?branch=transac2)](https://travis-ci.org/redpelicans/transacd)
-[![Dependency Status](https://david-dm.org/redpelicans/transacd.png)](https://david-dm.org/redpelicans/transacd) 
+[![Dependency Status](https://david-dm.org/redpelicans/transacd/transac2.svg)](https://david-dm.org/redpelicans/transacd/transac2)
 [![Coverage Status](https://coveralls.io/repos/redpelicans/transacd/badge.svg?branch=transac2)](https://coveralls.io/r/redpelicans/transacd?branch=transac2)
 
 
