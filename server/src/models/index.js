@@ -88,7 +88,10 @@ class Node {
   }
 
   get lastMessage(){
-    let nodes = _.filter([...this], node => node.isMessage());
+    // BUG with Babel
+    //let nodes = _.filter([...this], node => node.isMessage());
+    let nodes = [];
+    for (let node of this) if(node.isMessage()) nodes.push(node); 
     return nodes[nodes.length-1];
   }
 

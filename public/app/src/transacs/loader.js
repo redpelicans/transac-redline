@@ -2,11 +2,14 @@ import io from 'socket.io-client';
 
 export default class TransacLoader {
   constructor(){
-    console.log('init socket IO ...');
-    this.socket = io();
+    console.log('Init socket IO ...');
+    this.socket = io("http://rp1.redpelicans.com:3005");
   }
 
-  sayHello(msg, cb){
-    this.socket.emit('news', msg, cb);
+  loadTransacs(params, update, cb){
+    this.socket.emit('transacs:load', params, cb);
+    this.socket.on('transacs:changes', function(transac){
+      update(transac);
+    });
   }
 }
