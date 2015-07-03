@@ -4,7 +4,7 @@ import  async from "async";
 import  _ from "lodash";
 import  util from "util";
 import  moment from "moment";
-import * as transac  from '../src/server/helpers/transac';
+import * as transac  from '../server/src/helpers/transac';
 import * as DB from './helpers/db';
 import params from "./params";
 
