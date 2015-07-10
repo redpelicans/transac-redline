@@ -27,13 +27,19 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.4",
     "core-js": "npm:core-js@0.9.18",
     "css": "github:systemjs/plugin-css@0.1.12",
+    "datepicker": "github:eternicode/bootstrap-datepicker@1.4.0",
+    "eonasdan/bootstrap-datetimepicker": "github:eonasdan/bootstrap-datetimepicker@4.14.30",
     "font-awesome": "npm:font-awesome@4.3.0",
+    "jquery": "github:components/jquery@2.1.4",
+    "jquery-ui": "github:components/jqueryui@1.11.4",
+    "lodash": "npm:lodash@3.10.0",
+    "moment": "github:moment/moment@2.10.3",
     "socket.io": "npm:socket.io@1.3.5",
     "socket.io-client": "github:Automattic/socket.io-client@1.3.5",
     "github:aurelia/animator-css@0.13.0": {
       "aurelia-templating": "github:aurelia/templating@0.13.0"
     },
-    "github:aurelia/binding@0.8.0": {
+    "github:aurelia/binding@0.8.1": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.0",
       "aurelia-metadata": "github:aurelia/metadata@0.7.0",
       "aurelia-task-queue": "github:aurelia/task-queue@0.6.0",
@@ -62,7 +68,7 @@ System.config({
       "aurelia-logging": "github:aurelia/logging@0.6.0"
     },
     "github:aurelia/framework@0.13.0": {
-      "aurelia-binding": "github:aurelia/binding@0.8.0",
+      "aurelia-binding": "github:aurelia/binding@0.8.1",
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.0",
       "aurelia-loader": "github:aurelia/loader@0.8.0",
       "aurelia-logging": "github:aurelia/logging@0.6.0",
@@ -106,12 +112,12 @@ System.config({
       "core-js": "npm:core-js@0.9.18"
     },
     "github:aurelia/templating-binding@0.13.0": {
-      "aurelia-binding": "github:aurelia/binding@0.8.0",
+      "aurelia-binding": "github:aurelia/binding@0.8.1",
       "aurelia-logging": "github:aurelia/logging@0.6.0",
       "aurelia-templating": "github:aurelia/templating@0.13.0"
     },
     "github:aurelia/templating-resources@0.13.0": {
-      "aurelia-binding": "github:aurelia/binding@0.8.0",
+      "aurelia-binding": "github:aurelia/binding@0.8.1",
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.0",
       "aurelia-logging": "github:aurelia/logging@0.6.0",
       "aurelia-task-queue": "github:aurelia/task-queue@0.6.0",
@@ -126,7 +132,7 @@ System.config({
       "aurelia-templating": "github:aurelia/templating@0.13.0"
     },
     "github:aurelia/templating@0.13.0": {
-      "aurelia-binding": "github:aurelia/binding@0.8.0",
+      "aurelia-binding": "github:aurelia/binding@0.8.1",
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.0",
       "aurelia-html-template-element": "github:aurelia/html-template-element@0.2.0",
       "aurelia-loader": "github:aurelia/loader@0.8.0",
@@ -135,6 +141,9 @@ System.config({
       "aurelia-path": "github:aurelia/path@0.8.0",
       "aurelia-task-queue": "github:aurelia/task-queue@0.6.0",
       "core-js": "npm:core-js@0.9.18"
+    },
+    "github:components/jqueryui@1.11.4": {
+      "jquery": "github:components/jquery@2.1.4"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
@@ -474,6 +483,9 @@ System.config({
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:lodash@3.10.0": {
+      "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:miller-rabin@2.0.1": {
       "bn.js": "npm:bn.js@2.1.0",

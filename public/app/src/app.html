@@ -1,5 +1,18 @@
 <template>
-  <div class="page-host">
+  <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="brand navbar-brand">
+          <a ng-href="/"><div class="tlogo tlogo-xs tlogo-sm tlogo-md tlogo-lg"></div></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container view-container">
     <router-view></router-view>
   </div>
+
+
+  <alert></alert>
 </template>

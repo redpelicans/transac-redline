@@ -14,30 +14,45 @@ let logerror = debug('transac:error')
 
 export function init(params, resources){
   resources.io.on('connection', socket => {
-    function loadTransacs(params, cb){
-      function handleChange(err, event){
-        console.log("changes ....");
-        if(err) return console.log(err);
-        socket.emit('transacs:changes', event.new_val);
-      }
 
-      loginfo("socket.io loadTransacs ...");
-      let options = {
-          label: params.label
-        , from: params.from && moment(params.from, FMT).startOf('day').toDate()
-        , to: params.to && moment(params.to, FMT).startOf('day').toDate()
-        , dateMode: params.mode == 'v' ? 'valueDate' : 'createdAt'
-      }
-
-      transacs.loadAll(resources.conn, options, (err, transacs) => {
-        if(err) return cb(err);
-        r.table('transacs').changes().run(resources.conn, (err, cursor) => cursor.each(handleChange) );
-        cb(null, _.map(transacs, transac=>transac.toSummaryJSON()));
-      });
-
+    function manageOptions({label, from, to, dateMode='valueDate'} = {}){
+      from = from ? moment(from, FMT).startOf('day').toDate() : moment().startOf('day').toDate();
+      to = to ? moment(to, FMT).startOf('day').toDate() : moment().startOf('day').toDate();
+      dateMode = dateMode === 'valueDate' ? 'valueDate' : 'createdAt';
+      return { label: label, from: from, to: to, dateMode: dateMode };
     }
 
+    function loadTransacs(options, cb){
+      loginfo("socket.io loadTransacs ...");
+      let params = manageOptions(options);
+      let query =  r.table(Transac.collection).filter( 
+        r.row(params.dateMode).during(params.from, params.to, {leftBound: "closed", rightBound: "closed"}) 
+      );
+      if(params.label) query = query.filter({label: params.label});
+
+      query.run(resources.conn, (err, cursor) => {
+        if(err) return cb(err);
+        cursor.toArray((err, transacs) => {
+          if(err) return cb(err);
+          cb(null, transacs);
+        })
+      })
+    }
+
+    function subscribeTransacs(){
+      loginfo("socket.io subscribeTransacs ...");
+      r.table(Transac.collection).changes().run(resources.conn, (err, cursor) => {
+        if(err) return logerror(err);
+        cursor.each((err, event) => {
+          if(err) return logerror(err);
+          console.log(event.new_val);
+          socket.emit('transacs:event', event.new_val);
+        })
+      })
+    }
+
+    subscribeTransacs();
     socket.on('transacs:load', loadTransacs);
-    
+
   })
 }

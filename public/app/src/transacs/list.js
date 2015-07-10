@@ -1,24 +1,64 @@
 import {inject} from 'aurelia-framework';
-import TransacLoader from './loader';
+import _ from 'lodash';
+import TransacService from './service';
 
-@inject(TransacLoader)
+@inject(TransacService)
 export class TransacList {
-  constructor(loader){
-    this.loader = loader;
-    this.transacs = [];
+  constructor(service){
+    this.transacService = service;
+    this.transacs = [
+      {label: 'test', server: 'rp', valueDate: new Date, createdAt: new Date(), delay:15}
+    ];
+    this.from = new Date(2014,1,1);
+    this.to = new Date();
+    this.dateMode = "Processing Date";
+    this.dateModes = ["Processing Date", "Value Date"];
+    this.sortColumn = 'name';
+    this.sortOrder = 'asc';
   }
 
-  activate(){
-    function updates(transac){
-      console.log('updates ...');
-      this.transacs.push(transac);
+  reverseSortOrder(){
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+  }
+
+  sortTable(column){
+    if(this.sortColumn === column) this.reverseSortOrder();
+    this.sortColumn = column;
+    this.doSortTable();
+  }
+
+  doSortTable(){
+    this.transacs = _.sortByOrder(this.transacs, [this.sortColumn], [this.sortOrder]);
+  }
+
+  loadData(){
+    function transacUpdates(event){
+      console.log("transacs:event");
+      console.log(event);
     }
 
-    this.loader.loadTransacs({}, updates.bind(this), (err, res) => {
-      if(res){
-        console.log(res);
-        this.transacs = res;
-      }
-    });
+    let params = {
+      from: moment(this.from).format('DD/MM/YYYY'),
+      to: moment(this.to).format('DD/MM/YYYY'),
+      dateMode: this.dateMode === 'Value Date' ? 'valueDate' : 'createdAt'
+    };
+
+    //console.log(params);
+    this.unsubscribeHandler = this.transacService.subscribe(transacUpdates);
+    return this.transacService.load(params)
+      .then(transacs => {
+        if(transacs){ 
+          //this.transacs = transacs;
+          this.doSortTable();
+          console.log(transacs)
+        }
+      })
+      // TODO
+      .catch(err => console.log(err));
   }
+
+  activate(params){
+    return this.loadData();
+  }
+
 }

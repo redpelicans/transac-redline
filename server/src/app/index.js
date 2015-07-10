@@ -58,6 +58,10 @@ export function start(params, resources, cb) {
 
     require('./transac_io').init(app, resources);
     app.use('/', require('./transac').init(app, resources));
+
+    app.get('/', function(req, res) {
+        res.redirect('/app/');
+    });
     
     app.use(errors);
 
