@@ -41,9 +41,9 @@
           <tr  class="Xtransac-listing" repeat.for="transac of transacs" >
             <td style="text-align: left;"> 
               <span class="${transac.statusIcon}"></span> 
-              <span class="${transac.isRunningIcon}"></span> 
-              <span class="${transac.isMultiIcon}"></span> 
-              <span class="${transac.isLockIcon}"></span> 
+              <span class="${transac.runningIcon}"></span> 
+              <span class="${transac.compoundIcon}"></span> 
+              <span class="${transac.lockIcon}"></span> 
             </td>
             <td> <a href="#/transacs/${transac.id}/">${transac.label}</a> </td>
             <td> ${transac.server} </td>

@@ -10,9 +10,8 @@ export function makeNode(obj){
     case 'event':
       return new Event(obj);
     case 'message':
-      return new Event(obj);
+      return new Message(obj);
   }
-  return obj;
 }
 
 class Node {
@@ -23,6 +22,7 @@ class Node {
     if(parentId) this.parentId = parentId;
     this.type = type;
     this.label = label;
+    this.status = 'ok';
   }
 
   isTransac(){
@@ -45,7 +45,8 @@ class Node {
   addChild(node){
     if(!this._children) this._children = [];
     this._children.push(node);
-    node.parentId = this.id;
+    node.parent = this;
+    this.updateStates(node);
     return this;
   }
 
@@ -76,19 +77,6 @@ class Node {
     }
   }
 
-  get status(){
-    if(this.hasStatuses(['error', 'abort'])) return 'error';
-    if(this.hasStatuses(['warning'])) return 'warning';
-    return 'ok';
-  }
-
-  hasStatuses(statuses){
-    return _.some(this.children, function(child){return _.contains(statuses, child.status)});
-  }
-
-  hasLevel(level){
-    return _.some(this.children, function(child){return child.level === level});
-  }
 
   get length(){
     return this.children.length;
@@ -111,6 +99,11 @@ class Node {
     return lastMessage && lastMessage.createdAt;
   }
 
+  get transac(){
+    if(!this.parent)return this;
+    return this.parent.transac;
+  }
+
 }
 
 export class Transac extends Node {
@@ -118,31 +111,24 @@ export class Transac extends Node {
   constructor(options){
     super(options);
     if(options.valueDate) this.valueDate = moment(options.valueDate, "DD/MM/YYYY");
-    _.extend(this, _.pick(options, 'server', 'user', 'processId', 'locked', 'compound'));
+    _.extend(this, _.pick(options, 'server', 'user', 'processId'));
+    this.isRunning = true;
+    this.status = 'ok';
+    this.isLocked = options.locked;
+    this.isCompound = options.compound;
   }
 
-  isCompound(){
-    return this.compound;
+  updateStates(node){
+    if(node.isMessage()){
+      if(node.level === 'commit' || node.level === 'abort') this.isRunning = false;
+      this.delay = node.createdAt - this.createdAt;
+      if(node.status === 'error') this.status =  'error';
+      else if(this.status != 'error' && node.level === 'warning') this.status =  'warning';
+    }
+    if(this.parent) this.parent.updateStates(node);
   }
 
-  //@computedFrom('locked')
-  isLocked(){
-    return this.locked;
-  }
-
-  isRunning(){
-    //return !this.hasStatuses(['abort', 'commit']);
-    let lastMessage = this.lastMessage;
-    return !lastMessage || !_.contains(['abort', 'commit'], lastMessage.level);
-  }
-
-  get delay(){
-    let lastMessage = this.lastMessage;
-    if(lastMessage) return lastMessage.createdAt - this.createdAt;
-    else return 0;
-  }
-
-  //@computedFrom('status')
+  @computedFrom('status')
   get statusIcon(){
     switch(this.status){
       case 'ok':
@@ -154,19 +140,19 @@ export class Transac extends Node {
     }
   }
  
-  //@computedFrom('isRunning')
-  get isRunningIcon(){
-    return (this.isRunning ? 'glyphicon glyphicon-time green-icon' : 'glyphicon glyphicon-remove orange-icon');
+  @computedFrom('isRunning')
+  get runningIcon(){
+    return (this.isRunning ? 'glyphicon glyphicon-time green-icon' : 'glyphicon glyphicon-remove green-icon');
   }
 
-  //@computedFrom('isMulti')
-  get isMultiIcon(){
-    if(this.isMulti) return 'glyphicon glyphicon-th-large blue-icon';
+  @computedFrom('isCompound')
+  get compoundIcon(){
+    if(this.isCompound) return 'glyphicon glyphicon-th-large blue-icon';
   }
 
-  //@computedFrom('locked')
-  get isLockIcon(){
-    if(this.locked) return 'glyphicon glyphicon-lock gray-icon';
+  @computedFrom('isLocked')
+  get lockIcon(){
+    if(this.isLocked) return 'glyphicon glyphicon-lock gray-icon';
   }
 
 }
@@ -175,20 +161,23 @@ export class Event extends Node{
   constructor(options){
     super(options);
   }
+
+  updateStates(node){
+    if(node.isMessage()){
+      if(node.status === 'error') this.status =  'error';
+      else if(this.status != 'error' && node.level === 'warning') this.status =  'warning';
+    }
+    if(this.parent) this.parent.updateStates(node);
+  }
 }
 
 export class Message extends Node{
   constructor(options){
     super(options);
     this.level = options.level;
+    if(this.level === 'abort' || this.level === 'error') this.status =  'error';
+    else this.status =  this.level;
   }
-
-  get status(){
-    if(this.level === 'abort' || this.level === 'error') return 'error';
-    if(this.level === 'warning') return 'warning';
-    return 'ok';
-  }
-
 }
 
 

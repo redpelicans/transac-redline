@@ -34,10 +34,13 @@ export class TransacList {
   }
 
   addCache(event){
+    // check existence !!!
     let node = makeNode(event);
     this.eventsCache[node.id] = node;
     let parent = this.eventsCache[node.parentId];
     if(parent) parent.addChild(node);
+    //let transac = this.eventsCache[node.transacId];
+    //console.log(transac && {label: transac.label, isRunning: transac.isRunning})
     return node;
   }
 
@@ -50,9 +53,6 @@ export class TransacList {
 
     //console.log(params);
     this.unsubscribeHandler = this.transacService.subscribe( event => {
-      console.log("transacs:event");
-      console.log(event);
-
       let node = this.addCache(event);
       if(node.isTransac()) this.transacs.push(node);
     });
