@@ -17,7 +17,7 @@ export function init(params, resources){
 
     function manageOptions({label, from, to, dateMode='valueDate'} = {}){
       from = from ? moment(from, FMT).startOf('day').toDate() : moment().startOf('day').toDate();
-      to = to ? moment(to, FMT).startOf('day').toDate() : moment().startOf('day').toDate();
+      to = to ? moment(to, FMT).endOf('day').toDate() : moment().endOf('day').toDate();
       dateMode = dateMode === 'valueDate' ? 'valueDate' : 'createdAt';
       return { label: label, from: from, to: to, dateMode: dateMode };
     }

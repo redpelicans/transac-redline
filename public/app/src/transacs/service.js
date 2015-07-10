@@ -25,12 +25,6 @@ export default class TransacService {
     let promise = new Promise( (resolve, reject) =>{
       this.socket.emit('transacs:load', params, (err, transacs) => {
         if(err)return reject(err);
-        // for(let transac of transacs){
-        //   transac.valueDate = moment(transac.valueDate, "DD/MM/YYYY");
-        //   transac.createdAt = moment(transac.createdAt);
-        //   transac.__proto__ = Transac.prototype;
-        // }
-        // resolve(transacs);
         resolve(transacs);
       });
     })
